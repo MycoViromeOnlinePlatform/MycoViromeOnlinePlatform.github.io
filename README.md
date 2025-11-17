@@ -57,7 +57,7 @@ If you use the Mycovirome Platform in your research, please cite:
 
 ---
 
-## 🔗 Related Databases
+## Related Databases
 
 - [tRNAviz](http://trna.ucsc.edu/tRNAviz//summary/) — explore and visualize tRNA features  
 - [Prokaryotic AARS Database](http://bioinf.bio.uth.gr/aars/#/) — aminoacyl-tRNA synthetase motifs  
@@ -65,7 +65,7 @@ If you use the Mycovirome Platform in your research, please cite:
 
 ---
 
-## 🐛 Issues & Contributions
+## Issues & Contributions
 
 If you find a bug, have a suggestion, or want to contribute:
 - Open an **Issue** or **Pull Request** at:  
@@ -73,10 +73,10 @@ If you find a bug, have a suggestion, or want to contribute:
 
 ---
 
-## 👩‍💻 Author
+## Author
 
 **Cinthy Jimenez**  
 University of Auckland, New Zealand  
 *Project Lead — Mycovirome Online*  
 
-📅 *Last updated: Nov 2025*
+*Last updated: Nov 2025*
