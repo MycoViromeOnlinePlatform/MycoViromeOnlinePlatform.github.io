@@ -61,7 +61,7 @@ If you use the Mycovirome Online Platform in your research, please cite:
 
 - [ICMP](https://www.landcareresearch.co.nz/tools-and-resources/collections/icmp-culture-collection) — The ICMP web dataset contains the information on all culteres in the ICMP. The collection culture (ICMP) is a major international collection of living microorganism cultures.
 - [ICTV](https://ictv.global/) — Virus taxonomy: the database of the International Committee on Taxonomy of Viruses (ICTV).
-- [NCBI virus]([http://misynpat.org/](https://www.ncbi.nlm.nih.gov/labs/virus/vssi/#/find-data/virus) — Community portal for viral sequence data from RefSeq, GenBank and other NCBI repositories. 
+- [NCBI virus](https://www.ncbi.nlm.nih.gov/labs/virus/vssi/#/find-data/virus) — Community portal for viral sequence data from RefSeq, GenBank and other NCBI repositories. 
 
 ---
 
