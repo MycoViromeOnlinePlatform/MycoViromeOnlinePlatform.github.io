@@ -1,6 +1,6 @@
 # 🧫 Mycovirome Platform
 
-## 🌐 Overview
+## Overview
 
 The **Mycovirome Platform** is an interactive, web-based resource designed to explore the diversity, evolution, and biology of **mycoviruses** — viruses that infect fungi.  
 This project focuses on *Botrytis cinerea* as a model organism, integrating global data on mycovirus sequences, genome organization, and host interactions.  
@@ -8,13 +8,13 @@ This project focuses on *Botrytis cinerea* as a model organism, integrating glob
 The platform combines interactive data visualizations, searchable tables, and curated biological information to support research in **virology, mycology, and plant pathology**.
 
 ---
-## 🌐 Website
+## Website
 
 [Visit the website](https://mycoviromeonlineplatform.github.io/)
 
 ---
 
-## 🧩 Features
+## Features
 
 - 🌍 **Global Distribution Map** of *Botrytis cinerea* mycoviruses  
 - 🧬 **Genome Composition Visualizations** (stacked bars, circular plots)  
@@ -24,76 +24,7 @@ The platform combines interactive data visualizations, searchable tables, and cu
 
 ---
 
-## 📂 Repository Structure
-
-```
-MycoviromePlatform/
-├── index.html                        # Main website file
-├── style.css                         # CSS styles for the webpage
-├── Mycovirome_plots.html             # Genome composition visualizations
-├── virus_family_circular_plot.html   # Circular genome configuration plot
-├── mycovirome_map.html               # Geographic distribution map
-├── Botrytis_Mycovirus_Dataset.html   # Interactive dataset table
-├── make_interactive_table.R          # R script to create new interactive tables
-├── fig/                              # Folder with figures and profile images
-└── README.md                         # This file
-```
-
----
-
-## ⚙️ Requirements
-
-Before running the R script, make sure you have **R (≥ 4.0)** installed.  
-Then, install the required R packages:
-
-```r
-install.packages(c("DT", "htmlwidgets"))
-```
-
----
-
-## 🚀 Generate a New Interactive Dataset
-
-The script **`make_interactive_table.R`** creates a fully interactive HTML table from your CSV dataset.  
-You can run it directly from the command line.
-
-### **Usage**
-
-```bash
-Rscript make_interactive_table.R input_dataset.csv output_table.html
-```
-
-### **Example**
-
-```bash
-Rscript make_interactive_table.R Botrytis_Mycoviruses_Databases_updated2509225.csv Mycovirome_interactive_dataset.html
-```
-
-✅ This will:
-1. Read your CSV file  
-2. Clean text encoding (UTF-8)  
-3. Export an HTML table with:
-   - Search filters  
-   - Sorting  
-   - Scrollbars  
-   - Export buttons (CSV, Excel, PDF)
-
----
-
-## 🌍 View the Platform Locally
-
-You can open the main site locally by double-clicking `index.html`, or run a local web server:
-
-```bash
-python3 -m http.server 8080
-```
-
-Then open your browser at:  
-👉 [http://localhost:8080](http://localhost:8080)
-
----
-
-## 🧬 Curation Team
+## Curation Team
 
 | Name | Role | Affiliation |
 |------|------|--------------|
@@ -103,7 +34,7 @@ Then open your browser at:
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
 The platform integrates multiple HTML visualizations using `<iframe>`s embedded in `index.html`:
 
@@ -116,7 +47,7 @@ These components are generated via R scripts and data visualizations.
 
 ---
 
-## 📚 Citation
+## Citation
 
 If you use the Mycovirome Platform in your research, please cite:
 
