@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Mycovirome platform</title>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script language='JavaScript' type='text/JavaScript' src="/js/util.js"></script>
+<!--
+<script language='JavaScript' type='text/JavaScript' src="/js/mainPage.js"></script>
+-->
+        
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-25G2X1FEYG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-25G2X1FEYG');
+</script>
+
+
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+
+
+<script language='JavaScript' type='text/JavaScript'>
+
+
+function init(){
+
+	renderHeader(false);
+
+
+
+	// Add loading wheel
+	//$("#catalyticDomainDIV").before(`<div id="mainloader" class='loader'><img src='/fig/loader.png'></img></div>`);
+	//$("#catalyticDomainDIV").hide(0);
+
+
+	//setTimeout(function(){
+
+
+		//drawTree();
+
+		// Remove loading wheel
+		//$("#mainloader").remove();
+		//$("#catalyticDomainDIV").show(200);
+
+
+
+		//let eles = $(".aarsShowcase");
+		//showEle(eles, 0);
+		
+
+	//}, 50);
+
+
+	
+}
+
+
+
+showEle = function(eles, i, timeout = 200){
+
+
+
+	if (i >= eles.length) return;
+	
+	let ele = $(eles[i]);
+	ele.slideDown(100);
+
+	setTimeout(function(){
+		showEle(eles, i+1, timeout);
+	}, timeout);
+	
+
+
+}
+
+
+
+</script>
+
+	</head>
+<body>
+  <a href="https://github.com/cinthylorein/Virus_discovery_workflows">Methods</a>
+  <a href="./Mycovirome_interactive_dataset.html">Mycovirome</a>
+   
+   <header>
+      <h1>Welcome to Mycovirome online</h1>
+      <!-- Navigation bar-->
+      <nav>
+        <ul>
+          <li><a href="#About us:">About us</a></li>
+          <li><a href="#fungus pathogen"><em>Botrytis cinerea</em></a></li>
+          <li><a href="#mycoviruses">Mycovirome diversity</a></li>
+		  <li><a href="#Curation team">Curation team</a></li>
+		  <li><a href="#Related databases">Related databases</a></li>
+		  <li><a href="#References">References</a></li>
+		  <li><a href="#Issues">Issues</a></li>		  
+        </ul>
+      </nav>
+    </header>
+    
+<div id="funders-top-right">
+  <a href="https://www.bioeconomy.auckland.ac.nz/" target="_blank">
+    <img src="fig/Bioeconomy-Science-Institute-logo.jpg" alt="Bioeconomy Science Institute Logo" />
+  </a>
+  <a href="https://bioprotection.org.nz/" target="_blank">
+    <img src="fig/BioprotectionAotearoa.png" alt="Bioprotection Aotearoa Logo" />
+  </a>
+  <a href="https://www.auckland.ac.nz/" target="_blank">
+    <img src="fig/UoA-Logo.png" alt="University of Auckland Logo" />
+  </a>
+</div>
+    <!-- MAin content area --> 
+<main>
+
+	<!-- About us section -->
+	<section id="About us" class="banner">
+		<h2> About us:</h2> 
+		<article>
+			<p>We are an international research initiative dedicated to understanding the diversity, biology, and impact of mycoviruses (viruses that infect fungi). By focusing on <span><em>Botrytis cinerea</em></span> as a model system, we aim to build the world’s first integrated platform for visualizing, sharing, and analyzing global mycovirus data. Our work brings together expertise in plant pathology, virology, bioinformatics, and genomics to create a collaborative resource that:
+<ul>
+          <li>Promote mycovirus discovery</i>
+		  <li>Provide insights into <strong>fungal-virus-host interactions  </strong></li> 
+		  <li>Evolutionary and mycovirome population dynamics across spatial and temporal scales</li>
+		  <li>Support innovation in biocontrol strategies</li>
+		  </p>
+		  
+		</article>
+	</section>
+	
+	<!-- Fungus pathogen section -->
+	<section id="fungus pathogen" class="banner">
+
+		<h2><em>Botrytis cinerea</em></h2>
+			<p><em>Botrytis cinerea</em> is a globally distributed fungal pathogen best known as the cause of grey mould disease, which affects over 1,400 plant species. It infects a wide range of crops including grapes, strawberries, cherry, tomatoes, cucumbers, and ornamental flowers, leading to significant agricultural and economic losses worldwide.<br><br> Biologically, <em>B. cinerea</em> is a necrotrophic fungus, meaning it kills host plant tissue and then feeds on the dead matter. It thrives in humid, temperate climates and is notorious for rapidly adapting to fungicides, making disease management a challenge. Mycoviruses that cause hypovirulence (reduced virulence) in <em>B. cinerea</em> is promising alternative. <br><br>Because it is easy to culture in the laboratory, has a fully sequenced genome, genetic tools, and a large collection of natural isolates, <em>B. cinerea</em> has become one of the most studied fungal pathogens. It also hosts a rich diversity of mycoviruses, over 100 have been reported, which can alter its growth, reproduction, and virulence.<br><br>For these reasons, <em>B. cinerea</em> is an <strong>ideal model system</strong> for studying virus–fungus interactions, and a powerful entry point for building a global understanding of mycoviruses.</p>
+		
+		<!-- Link for the main paper for this plattaform -->
+		<a href="https://www.mdpi.com/1999-4915/16/9/1483" target="_blank">Learn More</a> <br></br>
+       <!-- Create <audio> tag here  -->
+       <audio autoplay controls>
+          <source src="./mp4/Microbial_Warfare__Weaponizing_Fungus_Viruses_and_the_Hidden_Th.mp4" type="audio/mp4">
+       </audio>
+
+			<h3>Global distribution</h3>
+			<!-- Figure of the geographical distrubuion fungus pathogen with Caption-->
+			<figure>
+				<img src="./fig/Global_distribution_Botrytis_cinerea.png" width="1100" height="600" />
+				<figcaption> Global distribution of <em>Botrytis cinerea</em>. The fungal records were extracted from USDA Host-Fungal Database, 2025 (Farr and Rossman 2024, https://fungi.ars.usda.gov/; accessed on 2025-10-02).</figcaption>
+			<!--https://www.researchgate.net/figure/Global-distribution-of-Botrytis-cinerea-2024-The-fungal-records-were-extracted-from_fig3_382637597 --> 
+			</figure>
+	</section>
+
+	<!-- Mycovirus section -->
+	<section id="mycoviruses" class="banner">
+		<h2>Mycovirome diversity</h2>
+			<p>Modern sequencing and analysing methods have evidece the identification of thousand of new virus species, including new mycovirus species.In Botrytis spp. has been identified over 100 mycoviruses, including those ones that induce hypovirulence around the world. Some of there mycoviruses belonged to produce viral particles, which can be interesting feature for their use as biocontrol agents (BCA).</p>
+	
+			<h3>Geographical distribution of <em>Botrytis cinerea</em> mycovirome</h3>
+
+
+
+			<iframe src="./mycovirome_map.html" width="1200" height="600" frameborder="0"></iframe>
+			
+			<!--What is the diversity of mycoviruses infecting a single fungal species (Botrytis cinerea), globaly?  -->
+
+			<h3> Mycovirome Genome configuration</h3>
+			<p> Diversity and prevalence of viral geome configuration idenfied in <em>Botrytis cinerea</em></p> 
+						
+						
+			<!-- Task: Wrap the two images in a flex container to display side by side--> 
+			<!-- <div class="image-row"> -->
+			<iframe src="./Mycovirome_plots.html" width="1200" height="600" frameborder="0"></iframe>
+			<iframe src="./virus_family_circular_plot.html" width="1200" height="800" frameborder="0"></iframe>
+			<!--</div>-->
+	
+	<!-- here we are quantifing prevalence as the number coexisting cases (viral sequences reported) infecting <em>Botrytis cinerea</em>-->
+			<ul class="flexContainer_left2">
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/dsRNA.png" width="100" height="100"> <br>	
+					<a href="./dsRNA_Mycoviruses.html"> Double-Stranded RNA <br> (dsRNA) </a>
+				</div>
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/ssRNA.png" width="100" height="100"> <br>
+					<a href="./dsRNA_Mycoviruses.html"> Single-Stranded RNA <br> (ssRNA) </a>
+				</div>
+			</li>
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/ssRNA(-).png" width="100" height="100"> <br>
+					<a href="./dsRNA_Mycoviruses.html"> Negative-Sense Single-Stranded RNA <br> (−ssRNA) </a>
+				</div>
+			</li>
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/ssRNA(+).png" width="100" height="100"> <br>
+					<a href="./dsRNA_Mycoviruses.html"> Positive-Sense Single-Stranded RNA <br> (+ssRNA) </a>
+				</div>	
+			</li>
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/ssDNA.png" width="100" height="100"> <br>
+					<a href="./dsRNA_Mycoviruses.html">	Single-Stranded DNA <br> (ssDNA) </a>
+				</div>
+			</li>
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/ssDNA(-).png" width="100" height="100"> <br>
+					<a href="./dsRNA_Mycoviruses.html"> Negative-Sense Single-Stranded DNA <br> (-ssDNA) </a>
+				</div>
+			</li>
+			<li class="aarsShowcase">
+				<div>
+					<img src="fig/ssDNA(+).png" width="100" height="100"> <br>
+					<a href="./dsRNA_Mycoviruses.html"> Positive-Sense Single-Stranded DNA <br> (+ssDNA) </a>
+				</div>
+			</li>
+			</ul>
+
+	</section>
+	
+	<!-- Curation team section -->
+	<section id="Curation team" class="banner">
+	<h2>Curation team</h2>
+				<ul class="flexContainer_left2">
+
+					<li class="aarsShowcase">
+					
+						<table>
+							<tr>
+								<td>
+									<h3>Cinthy Jimenez</h3> 
+								</td>
+								<td>
+										Curator
+								</td>
+							</tr>
+						</table>
+						
+
+						<div>
+							<img src="fig/Cinthy.jpg">
+							Cinthy Jimenez is a Research Fellow at the University of Auckland, New Zealand.	
+							Her research interests lie in phylogenetics and virus evolution.
+							<a href="https://scholar.google.com/citations?user=u-xjxGcAAAAJ&hl=en">View profile.</a>
+						</div>
+
+					</li>
+
+
+					<li class="aarsShowcase">
+
+							<table>
+							<tr>
+								<td>
+									<h3>Robin MacDiarmid</h3> 
+								</td>
+								<td>
+										Curator
+								</td>
+							</tr>
+						</table>
+					
+						<div>
+							<img src="fig/Robin.jpg" width="100" height="100">
+							Robin MacDiarmid is Sci Group Ldr in Plant Pathogen Environment at New Zealand Institute for Bioeconomy Science Limited.  Her research focuses on discovery of novel viruses and identifying their biological impact within ecosystems.
+							<a href="https://www.plantandfood.com/en-nz/staff/robin-macdiarmid">View profile.</a>
+						</div>
+
+					</li>
+
+
+					<li class="aarsShowcase">
+					
+
+							<table>
+							<tr>
+								<td>
+									<h3>Karmun Chooi</h3> 
+								</td>
+								<td>
+										Curator
+								</td>
+							</tr>
+						</table>
+
+						<div>
+							<img src="fig/karmun.jpg" width="100" height="100">
+							Karmun Chooi  is a Senior Scientist at Plant & Food Research in New Zealand, specializing in plant-insect-virus interactions and disease management.
+							Her work includes developing AI-based tools for detecting grapevine leafroll disease (GLD) and leading projects to enhance high-value fruit production.
+							<a href="https://www.plantandfood.com/en-nz/staff/robin-macdiarmid">View profile.</a>
+						</div>
+
+					</li>
+				</ul>
+	</section>
+	<!-- Related database section -->
+	<section id="Related databases" class="banner">
+	<h2>Related databases</h2>
+	<ul class="flexContainer_left2">
+					<li class="aarsShowcase">
+					
+						<h3><a target="_blank" href="https://www.landcareresearch.co.nz/tools-and-resources/collections/icmp-culture-collection">ICMP</a></h2>
+
+						<div>
+							<i>
+							The ICMP web dataset contains the information on all culteres in the ICMP. The collection culture (ICMP) is a major international collection of living microorganism cultures.
+							</i>
+							</div>
+
+					</li>
+
+					<li class="aarsShowcase">
+						<h3><a target="_blank" href="https://ictv.global/">ICTV</a></h2>
+						<div>
+							<i>
+								Virus taxonomy: the database of the International Committee on Taxonomy of Viruses (ICTV).  
+							</i><br><br>
+							Lefkowitz EJ, Dempsey DM, Hendrickson RC, Orton RJ, Siddell SG, Smith DB. (2017) Virus taxonomy: the database of the International Committee on Taxonomy of Viruses (ICTV). Nucleic Acids Res. Jan 4;46(D1):D708-D717. PMID: 29040670. PMCID: PMC5753373.
+						</div>
+					</li>
+
+					<li class="aarsShowcase">
+						<h3><a target="_blank" href"https://www.ncbi.nlm.nih.gov/labs/virus/vssi/#/find-data/virus">NCBI virus</a></h2>
+
+						<div>
+						<i>
+							Community portal for viral sequence data from RefSeq, GenBank and other NCBI repositories.
+
+							</i> 
+							</div>
+					</li> -->
+				</ul>
+	</section>
+</main>
+
+<!-- Footer Section -->
+<footer>
+
+	<section id="References" class="banner">
+	<h2>References</h2>
+	If this resource is helpful for your research, please cite our article: <br><br>
+
+	</section>
+	
+	
+		<section id="Issues" class="banner">
+	<h2>Issues </h2>
+	If you spot an error or have any inquiries, please create an issue or start a discussion on <a href="https://github.com/aarsonline/aarsonline.github.io">GitHub</a>. <br><br> 
+			
+	</section>
+	
+<!--<section id="Funders" class="banner">
+  <h2>Funders</h2>
+  <div class="funder-logos">
+    
+    <div class="funder">
+      <img src="fig/Bioeconomy-Science-Institute-logo.jpg" alt="Bioeconomy Science Institute Logo" />
+      <p class="funder-description">
+        The Bioeconomy Science Institute supports research that promotes sustainable biological systems, bio-based innovation, and environmental resilience.
+      </p>
+    </div>
+    
+    <div class="funder">
+      <img src="fig/BioprotectionAotearoa.png" alt="Bioprotection Aotearoa Logo" />
+      <p class="funder-description">
+        Bioprotection Aotearoa is a Centre of Research Excellence in New Zealand focusing on protecting native ecosystems and primary industries from biotic threats.
+      </p>
+    </div>
+    
+    <div class="funder">
+      <img src="fig/UoA-Logo.jpg" alt="University of Auckland Logo" />
+      <p class="funder-description">
+        The University of Auckland is New Zealand’s leading university, supporting world-class research and interdisciplinary collaboration across the sciences.
+      </p>
+    </div>
+
+  </div>
+</section> -->
+	
+</footer>
+</body>
+</html>
