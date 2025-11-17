@@ -2,10 +2,10 @@
 
 ## Overview
 
-The **MycoviromeOnline Platform** is an interactive, web-based resource designed to explore the diversity, evolution, and biology of **mycoviruses** — viruses that infect fungi.  
+The **Mycovirome Online Platform** is an interactive, web-based resource designed to explore the diversity, evolution, and biology of mycoviruses, viruses that infect fungi.  
 This project focuses on *Botrytis cinerea* as a model organism, integrating global data on mycovirus sequences, genome organization, and host interactions.  
 
-The platform combines interactive data visualizations, searchable tables, and curated biological information to support research in **virology, mycology, and plant pathology**.
+The platform combines interactive data visualizations, searchable tables, and curated biological information to support research in virology, mycology, and plant pathology.
 
 ---
 ## Website
