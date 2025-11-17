@@ -1,8 +1,8 @@
-# 🧫 Mycovirome Platform
+# 🧫 Mycovirome Online Platform
 
 ## Overview
 
-The **Mycovirome Platform** is an interactive, web-based resource designed to explore the diversity, evolution, and biology of **mycoviruses** — viruses that infect fungi.  
+The **MycoviromeOnline Platform** is an interactive, web-based resource designed to explore the diversity, evolution, and biology of **mycoviruses** — viruses that infect fungi.  
 This project focuses on *Botrytis cinerea* as a model organism, integrating global data on mycovirus sequences, genome organization, and host interactions.  
 
 The platform combines interactive data visualizations, searchable tables, and curated biological information to support research in **virology, mycology, and plant pathology**.
@@ -49,7 +49,7 @@ These components are generated via R scripts and data visualizations.
 
 ## Citation
 
-If you use the Mycovirome Platform in your research, please cite:
+If you use the Mycovirome Online Platform in your research, please cite:
 
 > Jimenez et al. (2025) *The Botrytis cinerea Mycovirome Platform:  
 > A Global Resource for Fungal Virus Discovery and Analysis.*  
@@ -59,9 +59,9 @@ If you use the Mycovirome Platform in your research, please cite:
 
 ## Related Databases
 
-- [tRNAviz](http://trna.ucsc.edu/tRNAviz//summary/) — explore and visualize tRNA features  
-- [Prokaryotic AARS Database](http://bioinf.bio.uth.gr/aars/#/) — aminoacyl-tRNA synthetase motifs  
-- [MiSynPat](http://misynpat.org/) — mitochondrial aminoacyl-tRNA synthetase and pathologies  
+- [ICMP](https://www.landcareresearch.co.nz/tools-and-resources/collections/icmp-culture-collection) — The ICMP web dataset contains the information on all culteres in the ICMP. The collection culture (ICMP) is a major international collection of living microorganism cultures.
+- [ICTV](https://ictv.global/) — Virus taxonomy: the database of the International Committee on Taxonomy of Viruses (ICTV).
+- [NCBI virus]([http://misynpat.org/](https://www.ncbi.nlm.nih.gov/labs/virus/vssi/#/find-data/virus) — Community portal for viral sequence data from RefSeq, GenBank and other NCBI repositories. 
 
 ---
 
@@ -75,7 +75,7 @@ If you find a bug, have a suggestion, or want to contribute:
 
 ## Author
 
-**Cinthy Jimenez**  
+**Cinthy Jimenez-Silva**  
 University of Auckland, New Zealand  
 *Project Lead — Mycovirome Online*  
 
