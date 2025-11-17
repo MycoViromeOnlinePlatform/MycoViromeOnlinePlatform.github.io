@@ -7,8 +7,11 @@ This project focuses on *Botrytis cinerea* as a model organism, integrating glob
 
 The platform combines interactive data visualizations, searchable tables, and curated biological information to support research in **virology, mycology, and plant pathology**.
 
-[Visit the website](https://mycoviromeonlineplatform.github.io/)
 ---
+## 🌐 Website
+
+[Visit the website](https://mycoviromeonlineplatform.github.io/)
+
 
 ## 🧩 Features
 
