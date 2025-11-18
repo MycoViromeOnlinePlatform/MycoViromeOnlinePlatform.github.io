@@ -13,7 +13,13 @@ The platform combines interactive data visualizations, searchable tables, and cu
 [Visit the website](https://mycoviromeonlineplatform.github.io/)
 
 ---
+##  Under Construction
 
+This is an early, pre-release version of the MycoVirome Online Platform website.
+The repository and site are actively being developed and may change frequently.
+A formal release will be announced soon.
+
+---
 ## Features
 
 - 🌍 **Global Distribution Map** of *Botrytis cinerea* mycoviruses  
