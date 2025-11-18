@@ -34,9 +34,9 @@ A formal release will be announced soon.
 
 | Name | Role | Affiliation |
 |------|------|--------------|
-| **Cinthy Jimenez** | Administrator | University of Auckland, New Zealand |
-| **Robin MacDiarmid** | Curator | NZ Institute for Bioeconomy Science Ltd. |
-| **Karmun Chooi** | Curator | Bioinformatics Researcher |
+| **Cinthy Jimenez** | Administrator | University of Auckland & NZ Institute for Bioeconomy Science Ltd. |
+| **Robin MacDiarmid** | Curator |  University of Auckland & NZ Institute for Bioeconomy Science Ltd. |
+| **Karmun Chooi** | Curator | NZ Institute for Bioeconomy Science Ltd. |
 
 ---
 
@@ -49,7 +49,7 @@ The platform integrates multiple HTML visualizations using `<iframe>`s embedded 
 - `virus_family_circular_plot.html` → Circular diversity plots  
 - `Botrytis_Mycovirus_Dataset.html` → Searchable and filterable dataset  
 
-These components are generated via R scripts and data visualizations.
+These components are generated via R scripts and Javascript.
 
 ---
 
@@ -58,8 +58,7 @@ These components are generated via R scripts and data visualizations.
 If you use the Mycovirome Online Platform in your research, please cite:
 
 > Jimenez et al. (2025) *The Botrytis cinerea Mycovirome Platform:  
-> A Global Resource for Fungal Virus Discovery and Analysis.*  
-> *Viruses* 16(9):1483.
+> A Global Resource for Fungal Virus Discovery and Analysis.* 
 
 ---
 
@@ -83,6 +82,5 @@ If you find a bug, have a suggestion, or want to contribute:
 
 **Cinthy Jimenez-Silva**  
 University of Auckland, New Zealand  
-*Project Lead — Mycovirome Online*  
 
 *Last updated: Nov 2025*
