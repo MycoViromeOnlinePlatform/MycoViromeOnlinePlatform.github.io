@@ -10,7 +10,7 @@ The platform combines interactive data visualizations, searchable tables, and cu
 ---
 ## Website
 
-[Visit the website](https://mycoviromeonlineplatform.github.io/)
+[Visit the website](https://MycoViromeOnlinePlatform.github.io/)
 
 ---
 ##  Under Construction
