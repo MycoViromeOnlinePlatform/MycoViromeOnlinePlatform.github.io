@@ -547,21 +547,30 @@ a[target="_blank"]:hover {
 
 #funders-top-right {
   position: fixed;
-  top: 0.1rem;
-  right: 0.1rem;
+  top: 2rem;         /* increased top margin to push below the browser edge */
+  right: 1rem;       /* increased right spacing */
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.1rem;
+  gap: 0.75rem;
   z-index: 1000;
-  background: none;        /* No background */
-  padding: 0;              /* No padding */
-  border: none;            /* No border */
+  background: none;
+  padding: 0;
+  border: none;
+  min-width: 180px;  /* optional: helps keep logos on one line */
 }
 
+/* Ensure the header is not overlapped by the fixed div */
+header {
+  margin-top: 100px; /* or more/less depending on your #funders-top-right size */
+}
+
+
 #funders-top-right img {
-  height: 80px;            /* Bigger logo height */
-  max-width: 140px;        /* Bigger max width */
+  max-height: 55px;
+  height: auto;
+  max-width: 120px;
+  width: auto;
   object-fit: contain;
   transition: transform 0.3s ease;
   background: none;        /* Remove any background */
@@ -572,7 +581,6 @@ a[target="_blank"]:hover {
 #funders-top-right img:hover {
   transform: scale(1.1);
 }
-
 
 @media (max-width: 900px) {
   #funders-top-right {
