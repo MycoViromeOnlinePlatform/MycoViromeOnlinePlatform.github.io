@@ -574,4 +574,28 @@ a[target="_blank"]:hover {
 }
 
 
+@media (max-width: 900px) {
+  #funders-top-right {
+    justify-content: center;
+    margin: 0 0 16px 0;
+    flex-wrap: wrap;
+  }
+  #funders-top-right a img {
+    max-height: 38px;
+    max-width: 90px;
+  }
+}
+
+@media (max-width: 600px) {
+  #funders-top-right {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  #funders-top-right a img {
+    max-height: 28px;
+    max-width: 70px;
+  }
+}
 
