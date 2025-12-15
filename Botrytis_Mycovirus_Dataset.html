@@ -18,1491 +18,1668 @@
 	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="css/style.css">
     <style>
-  /* Scrollable container */
-  .table-container {
-    overflow-x: auto;
-    width: 100%;
-  }
+<!--
+Paste the <style> block into the <head> of your page replacing your current table styles,
+and replace the DataTable initialization script with the snippet below (or merge it).
+This enforces fixed table layout for both header and body tables that DataTables creates,
+applies explicit column widths with !important, and forces DataTables to recompute column sizes.
+-->
+<style>
+/* Scrollable container */
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
 
-  /* Wrap long text in the last column */
-  #mycovirus-table td,
-  #mycovirus-table th {
-    white-space: normal !important;
-    word-wrap: break-word;
-    vertical-align: top;
-  }
+/* Use fixed layout so widths are deterministic and THEAD/TBODY line up */
+#mycovirus-table, 
+.dataTables_scrollHeadInner table, 
+.dataTables_scrollBody table {
+  table-layout: fixed !important;
+  width: 100% !important;
+  border-collapse: collapse;
+  box-sizing: border-box;
+}
 
-  /* Set a max-width for the last column */
-  #mycovirus-table td:last-child,
-  #mycovirus-table th:last-child {
-    min-width: 600px;   /* You can increase this as needed */
-    max-width: 1000px;
-  }
+/* Shared cell styles */
+#mycovirus-table th,
+#mycovirus-table td {
+  box-sizing: border-box;
+  padding: 6px 10px;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;             /* prevent wrapping by default */
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: 13px;
+}
 
-  /* Set a max-width for the last column */
-  #mycovirus-table td:first-child,
-  #mycovirus-table th:first-child {
-    min-width: 400px;   /* You can increase this as needed */
-    max-width: 800px;
-  }
-  
-  /* Optional: smaller padding for a more compact table */
-  #mycovirus-table td, 
-  #mycovirus-table th {
-    padding: 6px 10px;
-    text-align: left;
-  }
+/* Explicit column widths (applied to header AND body).
+   Adjust percentages if you want a different balance.
+   The !important prevents DataTables or other CSS from overriding them. */
+#mycovirus-table th:nth-child(1),
+#mycovirus-table td:nth-child(1)   { width: 26% !important; } /* Virus */
+#mycovirus-table th:nth-child(2),
+#mycovirus-table td:nth-child(2)   { width: 6%  !important; } /* Isolate */
+#mycovirus-table th:nth-child(3),
+#mycovirus-table td:nth-child(3)   { width: 8%  !important; } /* Acc. No. */
+#mycovirus-table th:nth-child(4),
+#mycovirus-table td:nth-child(4)   { width: 5%  !important; } /* Length */
+#mycovirus-table th:nth-child(5),
+#mycovirus-table td:nth-child(5)   { width: 6%  !important; } /* Complete/partial */
+#mycovirus-table th:nth-child(6),
+#mycovirus-table td:nth-child(6)   { width: 7%  !important; } /* Family */
+#mycovirus-table th:nth-child(7),
+#mycovirus-table td:nth-child(7)   { width: 6%  !important; } /* Genus */
+#mycovirus-table th:nth-child(8),
+#mycovirus-table td:nth-child(8)   { width: 5%  !important; } /* Species */
+#mycovirus-table th:nth-child(9),
+#mycovirus-table td:nth-child(9)   { width: 5%  !important; } /* Country */
+#mycovirus-table th:nth-child(10),
+#mycovirus-table td:nth-child(10)  { width: 5%  !important; } /* Host */
+#mycovirus-table th:nth-child(11),
+#mycovirus-table td:nth-child(11)  { width: 4%  !important; } /* Year host iso */
+#mycovirus-table th:nth-child(12),
+#mycovirus-table td:nth-child(12)  { width: 4%  !important; } /* Year virus seq */
+#mycovirus-table th:nth-child(13),
+#mycovirus-table td:nth-child(13)  { width: 14% !important; } /* Article */
+
+/* Allow the last (Article) column to wrap and break long tokens/URLs */
+#mycovirus-table th:nth-child(13),
+#mycovirus-table td:nth-child(13) {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* sensible min-widths for very small viewports */
+#mycovirus-table th:nth-child(1),
+#mycovirus-table td:nth-child(1) { min-width: 180px; }
+#mycovirus-table th:nth-child(13),
+#mycovirus-table td:nth-child(13) { min-width: 260px; }
+
+/* If DataTables wraps the header in a separate container, ensure that inner tables follow the same fixed layout */
+.dataTables_scrollHeadInner table th,
+.dataTables_scrollBody table td {
+  box-sizing: border-box;
+}
+
+/* Header style */
+#mycovirus-table thead th {
+  font-weight: 600;
+  text-align: right; /* keep header right-aligned as in your example */
+}
+
+/* Body cells left aligned */
+#mycovirus-table tbody td {
+  text-align: left;
+}
+
+/* Optional zebra striping for readability */
+#mycovirus-table tbody tr:nth-child(odd) { background: rgba(0,0,0,0.02); }
 </style>
+
+<!--
+Replace your existing DataTables init with the snippet below (or add the columns.adjust() calls).
+It ensures DataTables is created with autoWidth:false and calls columns.adjust() after init and after page load.
+-->
+<script>
+  $(document).ready(function() {
+    // initialize DataTable and keep reference
+    var table = $('#mycovirus-table').DataTable({
+      paging: true,
+      searching: true,
+      ordering: true,
+      info: true,
+      scrollX: true,
+      autoWidth: false, // important: prevent DataTables from auto-calculating widths
+      // optional: reduce redraw jitter
+      deferRender: true,
+      initComplete: function(settings, json) {
+        // force the header/body inner tables to use fixed table layout immediately
+        $('.dataTables_scrollHeadInner table, .dataTables_scrollBody table').css({
+          'table-layout': 'fixed',
+          'width': '100%'
+        });
+        // adjust columns so the header and body line up
+        this.api().columns.adjust();
+      }
+    });
+
+    // Also call adjust() again after all fonts and assets load (helps when webfonts resize headers)
+    $(window).on('load', function() {
+      table.columns.adjust().draw(false);
+    });
+
+    // If you dynamically change content or the container size, call:
+    // table.columns.adjust();
+  });
+</script>
 
 </head>
 <body>
-    <h1>Botrytis Mycovirus global dataset</h1>
+    <h2>Botrytis Mycovirus global dataset</h2>
     <div class="table-container">
     <table id="mycovirus-table" class="display">
-  <thead>
+	<ul>
+    <li>Virus: Virus_binomial (species) (n=190)</li>
+    <li>Isolate: Fungal_isolate (n=317)</li>
+    <li>Acc. No.: Virus_Accession (n=620)</li>
+	<li>Accession_database (n=2)</li>
+    <li>Length: Virus_sequence_length (220 - 17631 pb) </li>
+    <li>Complete/partial: Virus_Nuc_Completeness (n= Complete 260/ partial 360)</li>
+	<li>Genome configuration: Virus_Genome_type (n= dsRNA 119, ssRNA 12, ssRNA(-) 24,ssRNA(+) 356, ssDNA 79, ssDNA(-) 3, ssDNA(+) 10, Unclassified 17)</li>
+    <li>Family: Virus_Family (n=34)</li>
+    <li>Genus: Virus_Genus (n=41)</li>
+    <li>Country: Country_isolate_origin (n=14)</li>
+    <li>Host: Host_fungus (different to Botrytis)</li>
+    <li>Year of host isolation: Year_fungal_isolation (1976 - 2020)</li>
+    <li>Article: DOI (if present) link to the paper</li>
+  </ul>
+<thead>
     <tr style="text-align: right;">
       <th>Virus</th>
       <th>Isolate</th>
       <th>Acc. No.</th>
       <th>Length</th>
-      <th>Complete/partial</th>
+      <th>Comp/par</th>
       <th>Family</th>
       <th>Genus</th>
       <th>Species</th>
       <th>Country</th>
       <th>Host</th>
-      <th>Year of host isolation</th>
-      <th>Year of Virus sequencing</th>
+      <th>Year</th>
+      <th>Genome</th>
       <th>Article</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Botrytis cinerea binarnavirus 5-BcIsrael</td>
+      <td>Botryotinia fuckeliana partitivirus 1</td>
+      <td>BCS3 DN4616</td>
+      <td>MN954881</td>
+      <td>1780</td>
+      <td>Complete</td>
+      <td>Partitiviridae</td>
       <td>NaN</td>
-      <td>C_AA045425.1</td>
-      <td>2255</td>
       <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>dsRNA</td>
+      <td>https://doi.org/10.1128/mbio.03705-20</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea binarnavirus 5-BcIsrael</td>
+      <td>Botryotinia fuckeliana partitivirus 1</td>
       <td>NaN</td>
-      <td>C_AA045425.2</td>
-      <td>2255</td>
+      <td>AM491609</td>
+      <td>1793</td>
+      <td>Complete</td>
+      <td>Partitiviridae</td>
       <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>Italy</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>dsRNA</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea binarnavirus 5-BcIsrael</td>
+      <td>Botryotinia fuckeliana partitivirus 1</td>
+      <td>BCI12 DN10399</td>
+      <td>MN954882</td>
+      <td>1597</td>
+      <td>Complete</td>
+      <td>Partitiviridae</td>
       <td>NaN</td>
-      <td>C_AA045426.1</td>
-      <td>2373</td>
       <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Italy</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>dsRNA</td>
+      <td>https://doi.org/10.1128/mbio.03705-20</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea binarnavirus 5-BcIsrael</td>
+      <td>Botryotinia fuckeliana partitivirus 1</td>
       <td>NaN</td>
-      <td>C_AA045426.2</td>
-      <td>2373</td>
+      <td>AM491610</td>
+      <td>1566</td>
+      <td>Complete</td>
+      <td>Partitiviridae</td>
       <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>Italy</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>dsRNA</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botryotinia fuckeliana partitivirus 1</td>
+      <td>NaN</td>
+      <td>AM491611</td>
+      <td>1383</td>
+      <td>Complete</td>
+      <td>Partitiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Italy</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>dsRNA</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botryotinia fuckeliana totivirus 1</td>
+      <td>NaN</td>
+      <td>AM491608</td>
+      <td>5261</td>
+      <td>Complete</td>
+      <td>Totiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Italy</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>dsRNA</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botryotinia fuckeliana totivirus 1</td>
+      <td>Ctg473</td>
+      <td>GU108599</td>
+      <td>705</td>
+      <td>Partial</td>
+      <td>Totiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>United States of America</td>
+      <td>NaN</td>
+      <td>2008</td>
+      <td>dsRNA</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea alpha like virus 1</td>
+      <td>BCI2 12</td>
+      <td>MN625250</td>
+      <td>8008</td>
+      <td>Complete</td>
+      <td>Togaviridae</td>
+      <td>Alphavirus</td>
+      <td>NaN</td>
+      <td>Italy</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>ssRNA(+)</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea alpha like virus 1</td>
+      <td>BcT13</td>
+      <td>NaN</td>
+      <td>8515</td>
+      <td>Complete</td>
+      <td>Togaviridae</td>
+      <td>Alphavirus</td>
+      <td>NaN</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2021</td>
+      <td>ssRNA(+)</td>
+      <td>https://doi.org/10.1128/mbio.03705-20</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea betaendornavirus 1</td>
+      <td>HBtom 372</td>
+      <td>KU923747</td>
+      <td>11557</td>
+      <td>Complete</td>
+      <td>Endornaviridae</td>
+      <td>Betaendornavirus</td>
+      <td>NaN</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>dsRNA</td>
+      <td>https://doi.org/10.1007/s00705-016-3106-2</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea betaendornavirus 1</td>
+      <td>Bc2021 9</td>
+      <td>PP599424</td>
+      <td>10680</td>
+      <td>Partial</td>
+      <td>Endornaviridae</td>
+      <td>Betaendornavirus</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 1</td>
+      <td>WH 1</td>
+      <td>OL602096</td>
+      <td>2557</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 1</td>
+      <td>BCI12 DN4441</td>
+      <td>MN619795</td>
+      <td>2572</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 1</td>
+      <td>BCI12 DN4441</td>
+      <td>MT711186</td>
+      <td>2288</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 2</td>
+      <td>BCS14 DN413</td>
+      <td>MN619796</td>
+      <td>2564</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 2</td>
+      <td>BCS14 DN413</td>
+      <td>MT119676</td>
+      <td>2299</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 3</td>
+      <td>BCS8 DN5048</td>
+      <td>MN619797</td>
+      <td>2553</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 3</td>
+      <td>BCS8 DN10205</td>
+      <td>MT711185</td>
+      <td>2282</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 5</td>
+      <td>BCS8 DN967</td>
+      <td>MN619799</td>
+      <td>2411</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 5</td>
+      <td>BCS8 DN9735</td>
+      <td>MT711187</td>
+      <td>2253</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <td>Botrytis cinerea binarnavirus 6</td>
+      <td>WH 1</td>
+      <td>OL602100</td>
+      <td>2134</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
       <td>NaN</td>
-      <td>C_AA045495.1</td>
-      <td>2144</td>
       <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 6</td>
+      <td>BcBNV6</td>
+      <td>OR195697</td>
+      <td>3102</td>
+      <td>Complete</td>
+      <td>Splipalmiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
+      <td>Botrytis cinerea</td>
+      <td>2018/2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea binarnavirus 6</td>
+      <td>Bc2020 141</td>
+      <td>PP599446</td>
+      <td>2874</td>
+      <td>Partial</td>
+      <td>Birnaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea bocivirus 1</td>
+      <td>BCS14 DN413</td>
+      <td>MN617081</td>
+      <td>6743</td>
+      <td>Complete</td>
+      <td>Phenuiviridae</td>
+      <td>Bocivirus</td>
+      <td>Bocivirus botrytidis</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea binarnavirus 7</td>
-      <td>NaN</td>
-      <td>C_AA045500.1</td>
-      <td>2298</td>
-      <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Botrytis cinerea bocivirus 1</td>
+      <td>BCS14 DN413</td>
+      <td>MN617080</td>
+      <td>1653</td>
+      <td>Complete</td>
+      <td>Phenuiviridae</td>
+      <td>Bocivirus</td>
+      <td>Bocivirus botrytidis</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea narnavirus 4-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045427.1</td>
-      <td>2469</td>
-      <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Botrytis cinerea bocivirus 1</td>
+      <td>BCS14 DN413</td>
+      <td>MN617079</td>
+      <td>1293</td>
+      <td>Complete</td>
+      <td>Phenuiviridae</td>
+      <td>Bocivirus</td>
+      <td>Bocivirus botrytidis</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea binarnavirus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045428.1</td>
-      <td>2279</td>
-      <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea binarnavirus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045429.1</td>
-      <td>2532</td>
-      <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea binarnavirus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045429.2</td>
-      <td>2532</td>
-      <td>NaN</td>
-      <td>Narnaviridae</td>
-      <td>Narnavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 7</td>
-      <td>NaN</td>
-      <td>C_AA045430.1</td>
-      <td>2572</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 12</td>
-      <td>NaN</td>
-      <td>C_AA045487.1</td>
-      <td>2873</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 4-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045431.1</td>
-      <td>2711</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045432.1</td>
-      <td>2406</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045433.1</td>
-      <td>2796</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 13</td>
-      <td>NaN</td>
-      <td>C_AA045488.1</td>
-      <td>2517</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 14</td>
-      <td>NaN</td>
-      <td>C_AA045489.1</td>
-      <td>2565</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 15</td>
-      <td>NaN</td>
-      <td>C_AA045490.1</td>
-      <td>2214</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 16</td>
-      <td>NaN</td>
-      <td>C_AA045491.1</td>
-      <td>1459</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 17</td>
-      <td>NaN</td>
-      <td>C_AA045492.1</td>
-      <td>2462</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 2-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045434.1</td>
-      <td>2569</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 6-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045435.1</td>
-      <td>2496</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mitovirus 9-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045436.1</td>
-      <td>2713</td>
-      <td>NaN</td>
-      <td>Mitoviridae</td>
-      <td>Mitovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 10-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045437.1</td>
-      <td>2679</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 13-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045438.1</td>
-      <td>2894</td>
-      <td>NaN</td>
+      <td>Botrytis cinerea botoulivirus 18</td>
+      <td>SZ 2 3y</td>
+      <td>OK634395</td>
+      <td>2759</td>
+      <td>Complete</td>
       <td>Botourmiaviridae</td>
       <td>Botoulivirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>China</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 11-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045439.1</td>
-      <td>2837</td>
-      <td>NaN</td>
+      <td>Botrytis cinerea botoulivirus 19</td>
+      <td>SZ 2 3y</td>
+      <td>OK634396</td>
+      <td>2812</td>
+      <td>Complete</td>
       <td>Botourmiaviridae</td>
       <td>Botoulivirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>China</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 15-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045440.1</td>
-      <td>2439</td>
-      <td>NaN</td>
+      <td>Botrytis cinerea botourmiavirus 1</td>
+      <td>Kst14A</td>
+      <td>OP156825</td>
+      <td>5047</td>
+      <td>Complete</td>
       <td>Botourmiaviridae</td>
-      <td>Botoulivirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 16-BcIsrael</td>
+      <td>Botrytis cinerea botybirnavirus 1</td>
       <td>NaN</td>
-      <td>C_AA045441.1</td>
-      <td>2559</td>
+      <td>MH321499</td>
+      <td>6192</td>
+      <td>Complete</td>
+      <td>Botybirnaviridae</td>
       <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Botoulivirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>Chile</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea botybirnavirus 1</td>
+      <td>NaN</td>
+      <td>MH321500</td>
+      <td>5567</td>
+      <td>Complete</td>
+      <td>Botybirnaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Chile</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea botybirnavirus 2</td>
+      <td>BCS17 DN61</td>
+      <td>MN627274</td>
+      <td>6038</td>
+      <td>Complete</td>
+      <td>Botybirnaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 17-BcIsrael</td>
+      <td>Botrytis cinerea botybirnavirus 2</td>
+      <td>BCS17 DN61</td>
+      <td>MN627275</td>
+      <td>5936</td>
+      <td>Complete</td>
+      <td>Botybirnaviridae</td>
       <td>NaN</td>
-      <td>C_AA045442.1</td>
-      <td>2038</td>
       <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Botoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 4-BcIsrael</td>
+      <td>Botrytis cinerea botybirnavirus 3</td>
+      <td>BcBV3</td>
+      <td>OR161976</td>
+      <td>6458</td>
+      <td>Complete</td>
+      <td>Botybirnaviridae</td>
       <td>NaN</td>
-      <td>C_AA045443.1</td>
-      <td>3601</td>
       <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Botoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Pakistan</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2018/2019</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 7-BcIsrael</td>
+      <td>Botrytis cinerea botybirnavirus 3</td>
+      <td>BcBV3</td>
+      <td>OR161977</td>
+      <td>5965</td>
+      <td>Complete</td>
+      <td>Botybirnaviridae</td>
       <td>NaN</td>
-      <td>C_AA045444.1</td>
-      <td>2685</td>
       <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Magoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Pakistan</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2018/2019</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea ourmia-like virus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045445.1</td>
-      <td>3458</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Penoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 9-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045446.1</td>
-      <td>2934</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Penoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 18</td>
-      <td>NaN</td>
-      <td>C_AA045493.1</td>
-      <td>2712</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 12-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045447.1</td>
-      <td>2876</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Botoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 2-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045471.1</td>
-      <td>3866</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>Penoulivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea ourmia-like virus 19</td>
-      <td>NaN</td>
-      <td>C_AA045494.1</td>
-      <td>2860</td>
-      <td>NaN</td>
-      <td>Botourmiaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirus 1 satellite-like RNA-BI</td>
-      <td>NaN</td>
-      <td>C_AA045449.1</td>
-      <td>4029</td>
-      <td>NaN</td>
-      <td>Hypoviridae</td>
-      <td>Betahypovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045448.1</td>
-      <td>10276</td>
-      <td>NaN</td>
-      <td>Hypoviridae</td>
-      <td>Betahypovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirus 5-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045472.1</td>
-      <td>14431</td>
-      <td>NaN</td>
-      <td>Hypoviridae</td>
-      <td>Gammahypovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045450.1</td>
-      <td>10374</td>
-      <td>NaN</td>
-      <td>Hypoviridae</td>
-      <td>Betahypovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirus 4-BcIsrael</td>
-      <td>NaN</td>
-      <td>MN617171.1</td>
-      <td>16145</td>
-      <td>NaN</td>
-      <td>Hypoviridae</td>
-      <td>Gammahypovirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea fusarivirus 5-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045451.1</td>
-      <td>6349</td>
-      <td>NaN</td>
-      <td>Fusariviridae</td>
-      <td>Alphafusarivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea fusarivirus 9</td>
-      <td>NaN</td>
-      <td>C_AA045496.1</td>
-      <td>8461</td>
-      <td>NaN</td>
-      <td>Fusariviridae</td>
-      <td>Betafusarivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea fusarivirus 4-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045473.1</td>
-      <td>8339</td>
-      <td>NaN</td>
-      <td>Fusariviridae</td>
-      <td>Betafusarivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea endornavirus 5</td>
-      <td>NaN</td>
-      <td>C_AA045497.1</td>
-      <td>11097</td>
-      <td>NaN</td>
-      <td>Endornaviridae</td>
-      <td>Betaendornavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea endornavirus 2-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045452.1</td>
-      <td>12604</td>
-      <td>NaN</td>
-      <td>Endornaviridae</td>
-      <td>Betaendornavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea endornavirus 6</td>
-      <td>NaN</td>
-      <td>C_AA045498.1</td>
-      <td>11541</td>
-      <td>NaN</td>
-      <td>Endornaviridae</td>
-      <td>Betaendornavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis virus F-BcIsrael</td>
-      <td>NaN</td>
-      <td>OM928008.1</td>
-      <td>6872</td>
-      <td>NaN</td>
-      <td>Gammaflexiviridae</td>
-      <td>Mycoflexivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea deltaflexivirus 4</td>
-      <td>NaN</td>
-      <td>C_AA045499.1</td>
-      <td>6648</td>
-      <td>NaN</td>
+      <td>Botrytis cinerea deltaflexivirus 1</td>
+      <td>WH 1</td>
+      <td>OL602089</td>
+      <td>5575</td>
+      <td>Partial</td>
       <td>Deltaflexiviridae</td>
       <td>Deltaflexivirus</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea deltaflexivirus 1</td>
+      <td>BCS16 DN4173</td>
+      <td>MN625249</td>
+      <td>4869</td>
+      <td>Complete</td>
+      <td>Deltaflexiviridae</td>
+      <td>Deltaflexivirus</td>
+      <td>NaN</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea mycotymovirus 1-BcIsrael</td>
+      <td>Botrytis cinerea deltaflexivirus 2</td>
+      <td>WH 1</td>
+      <td>OL602088</td>
+      <td>6866</td>
+      <td>Partial</td>
+      <td>Deltaflexiviridae</td>
       <td>NaN</td>
-      <td>C_AA045453.1</td>
-      <td>6284</td>
       <td>NaN</td>
-      <td>Tymoviridae</td>
-      <td>/</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea deltaflexivirus 3</td>
+      <td>WH 1</td>
+      <td>OL602097</td>
+      <td>2516</td>
+      <td>Partial</td>
+      <td>Deltaflexiviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea deltaflexivirus 4</td>
+      <td>BcDFV4</td>
+      <td>OR195696</td>
+      <td>6628</td>
+      <td>Complete</td>
+      <td>Deltaflexiviridae</td>
+      <td>Deltaflexivirus</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
+      <td>Botrytis cinerea</td>
+      <td>2018/2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 1</td>
+      <td>BcNSW3</td>
+      <td>NaN</td>
+      <td>14096</td>
+      <td>Complete</td>
+      <td>Endornaviridae</td>
+      <td>Betaendornavirus</td>
+      <td>NaN</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>1977</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 2</td>
+      <td>BCI1 DN2153</td>
+      <td>MN617758</td>
+      <td>13581</td>
+      <td>Complete</td>
+      <td>Endornaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Italy</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea flexivirus 1-BcIsrael</td>
+      <td>Botrytis cinerea endornavirus 2</td>
+      <td>Bc2020 101</td>
+      <td>PP599417</td>
+      <td>1839</td>
+      <td>Partial</td>
+      <td>Endornaviridae</td>
       <td>NaN</td>
-      <td>C_AA045458.1</td>
-      <td>10491</td>
       <td>NaN</td>
-      <td>Gammaflexiviridae</td>
-      <td>Botryflexivirus</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 2</td>
+      <td>Bc2020 25</td>
+      <td>PP599418</td>
+      <td>756</td>
+      <td>Partial</td>
+      <td>Endornaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 2</td>
+      <td>Bc2020 252</td>
+      <td>PP599425</td>
+      <td>1581</td>
+      <td>Partial</td>
+      <td>Endornaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 2</td>
+      <td>Bc2020 25</td>
+      <td>PP599419</td>
+      <td>2430</td>
+      <td>Partial</td>
+      <td>Endornaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 2</td>
+      <td>Bc2020 131</td>
+      <td>PP599427</td>
+      <td>13635</td>
+      <td>Partial</td>
+      <td>Endornaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea endornavirus 3</td>
+      <td>BCI11 DN9384</td>
+      <td>MN839443</td>
+      <td>13582</td>
+      <td>Complete</td>
+      <td>Endornaviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Italy</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea umbra-like virus 4</td>
+      <td>Botrytis cinerea endornavirus 4</td>
+      <td>Kst31</td>
+      <td>OL412282</td>
+      <td>13765</td>
+      <td>Complete</td>
+      <td>Endornaviridae</td>
       <td>NaN</td>
-      <td>C_AA045501.1</td>
-      <td>4423</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Pakistan</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea umbra-like virus 1-BcIsrael</td>
+      <td>Botrytis cinerea flexivirus 1</td>
+      <td>BCI5 11</td>
+      <td>MN625248</td>
+      <td>13985</td>
+      <td>Complete</td>
+      <td>Unclassified</td>
+      <td>flexivirus</td>
       <td>NaN</td>
-      <td>C_AA045454.1</td>
-      <td>3556</td>
-      <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Italy</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea umbra-like virus 5</td>
+      <td>Botrytis cinerea flexivirus 1</td>
+      <td>Bc2020 264</td>
+      <td>PP599426</td>
+      <td>1926</td>
+      <td>Partial</td>
+      <td>Flexiviridae</td>
       <td>NaN</td>
-      <td>C_AA045502.1</td>
-      <td>4279</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 1</td>
+      <td>HBtom 372</td>
+      <td>MG554633</td>
+      <td>8448</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus sinensis</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 1</td>
+      <td>S1</td>
+      <td>MG554635</td>
+      <td>3482</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus sinensis</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 1</td>
+      <td>S2</td>
+      <td>MG554636</td>
+      <td>3253</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus sinensis</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 1</td>
+      <td>Bc2020 127</td>
+      <td>PP599388</td>
+      <td>4680</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus sinensis</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 3</td>
+      <td>BCS15 DN2871</td>
+      <td>MN617762</td>
+      <td>8354</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus hispaniae</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea umbra-like virus 6</td>
+      <td>Botrytis cinerea fusarivirus 3</td>
+      <td>Bc2020 246</td>
+      <td>PP599387</td>
+      <td>4974</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus hispaniae</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
       <td>NaN</td>
-      <td>C_AA045503.1</td>
-      <td>1417</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 4</td>
+      <td>BCI12 DN9205</td>
+      <td>MN617763</td>
+      <td>8349</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus iberiae</td>
+      <td>Italy</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea alpha-like virus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045455.1</td>
-      <td>7992</td>
-      <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Botrytis cinerea fusarivirus 5</td>
+      <td>BCS3 DN2128</td>
+      <td>MN617764</td>
+      <td>6313</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Alphafusarivirus</td>
+      <td>Alphafusarivirus botrytidis</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea alpha-like virus 2</td>
+      <td>Botrytis cinerea fusarivirus 6</td>
+      <td>BCS8 DN9299</td>
+      <td>MN617765</td>
+      <td>6301</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
       <td>NaN</td>
-      <td>C_AA045504.1</td>
-      <td>2904</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea alpha-like virus 3</td>
+      <td>Botrytis cinerea fusarivirus 6</td>
+      <td>BcV1</td>
       <td>NaN</td>
-      <td>C_AA045505.1</td>
-      <td>3436</td>
+      <td>6369</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>1992</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 6</td>
+      <td>BcT6</td>
+      <td>NaN</td>
+      <td>6324</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 7</td>
+      <td>BCS13 13</td>
+      <td>MN617766</td>
+      <td>7881</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus botrytidis</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea RNA virus 1-BcIsrael</td>
+      <td>Botrytis cinerea fusarivirus 7</td>
+      <td>Bc2020 10</td>
+      <td>PP599385</td>
+      <td>5025</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
+      <td>Betafusarivirus</td>
+      <td>Betafusarivirus botrytidis</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
       <td>NaN</td>
-      <td>C_AA045459.1</td>
-      <td>8938</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 8</td>
+      <td>Kst14</td>
+      <td>OK558541</td>
+      <td>6424</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
+      <td>Botrytis cinerea</td>
+      <td>2018/2019</td>
+      <td>NaN</td>
+      <td>10.1007/s11262-024-02073-8</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 8</td>
+      <td>Bc2020 215</td>
+      <td>PP599396</td>
+      <td>4656</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 9</td>
+      <td>Kst14</td>
+      <td>OK558542</td>
+      <td>8370</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>10.1007/s11262-024-02073-8</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 9</td>
+      <td>Bc2020 141</td>
+      <td>PP599391</td>
+      <td>4974</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea fusarivirus 9a</td>
+      <td>Kst32B</td>
+      <td>OP328159</td>
+      <td>6298</td>
+      <td>Complete</td>
+      <td>Fusariviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea dsRNA mycovirus 1</td>
+      <td>Botrytis cinerea fusarivirus 9a</td>
+      <td>BC18 NODE 6</td>
       <td>NaN</td>
-      <td>C_AA045476.1</td>
-      <td>9401</td>
+      <td>6441</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
       <td>NaN</td>
-      <td>Unassigned</td>
-      <td>/</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>New Zealand</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2011</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea mycovirus 4-BcIsrael</td>
+      <td>Botrytis cinerea fusarivirus 9a</td>
+      <td>BC21 NODE 8</td>
       <td>NaN</td>
-      <td>C_AA045460.1</td>
-      <td>1665</td>
+      <td>6318</td>
+      <td>Partial</td>
+      <td>Fusariviridae</td>
       <td>NaN</td>
-      <td>Quadriviridae</td>
-      <td>/</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>New Zealand</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2011</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea mycovirus 4-BcIsrael</td>
+      <td>Botrytis cinerea genomovirus 1</td>
+      <td>LD17 26</td>
+      <td>MT497383</td>
+      <td>1710</td>
+      <td>Complete</td>
+      <td>Genomoviridae</td>
       <td>NaN</td>
-      <td>C_AA045461.1</td>
-      <td>2103</td>
       <td>NaN</td>
-      <td>Quadriviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
+      <td>China</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2017</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea mycovirus 5-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045462.1</td>
-      <td>2178</td>
-      <td>NaN</td>
-      <td>Curvulaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mycovirus 5-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045463.1</td>
-      <td>1153</td>
-      <td>NaN</td>
-      <td>Curvulaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mycovirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045464.1</td>
-      <td>2026</td>
-      <td>NaN</td>
-      <td>Curvulaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mycovirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045465.1</td>
-      <td>1618</td>
-      <td>NaN</td>
-      <td>Curvulaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 5</td>
-      <td>NaN</td>
-      <td>C_AA045477.1</td>
-      <td>1278</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 6</td>
-      <td>NaN</td>
-      <td>C_AA045478.1</td>
-      <td>1405</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 7</td>
-      <td>NaN</td>
-      <td>C_AA045479.1</td>
-      <td>1534</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 4-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045466.1</td>
-      <td>1770</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 4-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045467.1</td>
-      <td>1560</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 8</td>
-      <td>NaN</td>
-      <td>C_AA045480.1</td>
-      <td>1682</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 8</td>
-      <td>NaN</td>
-      <td>C_AA045481.1</td>
-      <td>1345</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 9</td>
-      <td>NaN</td>
-      <td>C_AA045482.1</td>
-      <td>1815</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Epsilonpartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 10</td>
-      <td>NaN</td>
-      <td>C_AA045483.1</td>
-      <td>1641</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Epsilonpartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 10</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1670</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045468.1</td>
-      <td>1525</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea partitivirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045469.1</td>
-      <td>1770</td>
-      <td>NaN</td>
-      <td>Partitiviridae</td>
-      <td>Gammapartitivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea victorivirus 4</td>
-      <td>NaN</td>
-      <td>C_AA045485.1</td>
-      <td>4022</td>
-      <td>NaN</td>
-      <td>Totiviridae</td>
-      <td>Victorivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea victorivirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045470.1</td>
-      <td>5111</td>
-      <td>NaN</td>
-      <td>Totiviridae</td>
-      <td>Victorivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea victorivirus 5</td>
-      <td>NaN</td>
-      <td>C_AA045486.1</td>
-      <td>5284</td>
-      <td>NaN</td>
-      <td>Totiviridae</td>
-      <td>Victorivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea victorivirus 3-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045470.1</td>
-      <td>1265</td>
-      <td>NaN</td>
-      <td>Totiviridae</td>
-      <td>Victorivirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea mymonavirus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045475.1</td>
-      <td>7850</td>
-      <td>NaN</td>
-      <td>Mymonaviridae</td>
-      <td>Sclerotimonavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea brome-like virus 1</td>
-      <td>NaN</td>
-      <td>C_AA045509.1</td>
-      <td>3816</td>
-      <td>NaN</td>
-      <td>/</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea virga-like virus 1</td>
-      <td>NaN</td>
-      <td>C_AA045508.1</td>
-      <td>3476</td>
-      <td>NaN</td>
-      <td>Related toVirgaviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea poty-like virus 1</td>
-      <td>NaN</td>
-      <td>C_AA045507.1</td>
-      <td>3236</td>
-      <td>NaN</td>
-      <td>Related toPotyviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea negative-stranded RNA virus 7-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045474.1</td>
-      <td>9956</td>
-      <td>NaN</td>
-      <td>Mymonaviridae</td>
-      <td>Botrytimonavirus</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea negative-stranded RNA virus 6-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045457.1</td>
-      <td>7014</td>
-      <td>NaN</td>
-      <td>Bunyavirales</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea orthobunya-like virus 1-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045456.1</td>
-      <td>6445</td>
-      <td>NaN</td>
-      <td>Bunyavirales</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea negative-stranded RNA virus 13-BcIsrael</td>
-      <td>NaN</td>
-      <td>C_AA045506.1</td>
-      <td>2620</td>
-      <td>NaN</td>
-      <td>Bunyavirales</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirulence-associated DNA virus 1</td>
-      <td>NaN</td>
-      <td>MT425545.1</td>
+      <td>Botrytis cinerea hypovirulence associated DNA virus 1 DNA A</td>
+      <td>Skr4</td>
+      <td>MT425545</td>
       <td>1693</td>
-      <td>NaN</td>
+      <td>Complete</td>
       <td>Genomoviridae</td>
-      <td>/</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+      <td>China</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2019</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea hypovirulence-associated DNA virus 1</td>
-      <td>NaN</td>
-      <td>MT425546.1</td>
+      <td>Botrytis cinerea hypovirulence associated DNA virus 1 DNA B</td>
+      <td>Skr4</td>
+      <td>MT425546</td>
       <td>1692</td>
-      <td>NaN</td>
+      <td>Complete</td>
       <td>Genomoviridae</td>
-      <td>/</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+      <td>China</td>
       <td>Botrytis cinerea</td>
-      <td>2018</td>
+      <td>2019</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td>Botrytis cinerea hypovirulence-associated DNA virus 1</td>
-      <td>NaN</td>
-      <td>MT425547.1</td>
-      <td>1675</td>
-      <td>NaN</td>
-      <td>Genomoviridae</td>
-      <td>/</td>
-      <td>NaN</td>
-      <td>Israel</td>
-      <td>Botrytis cinerea</td>
-      <td>2018</td>
-      <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
-    </tr>
-    <tr>
-      <td>Botrytis cinerea hypovirulence-associated DNA virus 1</td>
-      <td>NaN</td>
-      <td>MT425548.1</td>
+      <td>Botrytis cinerea hypovirulence associated DNA virus 1 DNA D</td>
+      <td>Skr4</td>
+      <td>MT425548</td>
       <td>1763</td>
-      <td>NaN</td>
+      <td>Complete</td>
       <td>Genomoviridae</td>
-      <td>/</td>
       <td>NaN</td>
-      <td>Israel</td>
+      <td>NaN</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1</td>
+      <td>HBtom 372</td>
+      <td>MG554632</td>
+      <td>10252</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>Betahypovirus</td>
+      <td>Betahypovirus sinensis</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1</td>
+      <td>BcHv1.HBstr 470</td>
+      <td>MH347277</td>
+      <td>10250</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>Betahypovirus</td>
+      <td>Betahypovirus sinensis</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1</td>
+      <td>WH 1</td>
+      <td>OL602084</td>
+      <td>10061</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>Betahypovirus</td>
+      <td>Betahypovirus sinensis</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1</td>
+      <td>BcT6</td>
+      <td>NaN</td>
+      <td>10141</td>
+      <td>Partial</td>
+      <td>Hypoviridae</td>
+      <td>Betahypovirus</td>
+      <td>Betahypovirus sinensis</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1</td>
+      <td>BcT13</td>
+      <td>NaN</td>
+      <td>10232</td>
+      <td>Partial</td>
+      <td>Hypoviridae</td>
+      <td>Betahypovirus</td>
+      <td>Betahypovirus sinensis</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2021</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1</td>
+      <td>BcT9</td>
+      <td>NaN</td>
+      <td>10543</td>
+      <td>Partial</td>
+      <td>Hypoviridae</td>
+      <td>Betahypovirus</td>
+      <td>Betahypovirus sinensis</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1 satellite like RNA</td>
+      <td>NaN</td>
+      <td>MG554634</td>
+      <td>3960</td>
+      <td>Complete</td>
+      <td>Hypoviridae satellite</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>2013</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1 satellite like RNA</td>
+      <td>VEVh1</td>
+      <td>ON714133</td>
+      <td>3738</td>
+      <td>Complete</td>
+      <td>Hypoviridae satellite</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Russia</td>
+      <td>NaN</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 1 satellite like RNA</td>
+      <td>VSVh1</td>
+      <td>ON714135</td>
+      <td>3738</td>
+      <td>Complete</td>
+      <td>Hypoviridae satellite</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Russia</td>
+      <td>NaN</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 2</td>
+      <td>BCS3 DN9124</td>
+      <td>MN617169</td>
+      <td>13722</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>Alphahypovirus</td>
+      <td>Alphahypovirus botrytidis</td>
+      <td>Spain</td>
       <td>Botrytis cinerea</td>
       <td>2018</td>
       <td>NaN</td>
-      <td>Duan J, Yao Y, Xu J, Zhang A, Kong X, Lin Y, Xie J, Cheng J, Fu Y, Chen T, Li B. The rules in co-infection of multiple viruses across diverse lineages in a fungal host. MBio. 2025 Jun 11;16(6):e00262-25.</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 2</td>
+      <td>Bc2020 215</td>
+      <td>PP599395</td>
+      <td>12606</td>
+      <td>Partial</td>
+      <td>Hypoviridae</td>
+      <td>Alphahypovirus</td>
+      <td>Alphahypovirus botrytidis</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 3</td>
+      <td>BCI1 3</td>
+      <td>MN617170</td>
+      <td>10863</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Italy</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 4</td>
+      <td>BCS17 DN134</td>
+      <td>MN617171</td>
+      <td>17631</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>Thetahypovirus</td>
+      <td>Thetahypovirus botrytidis</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 5</td>
+      <td>BCI10 DN5057</td>
+      <td>MT157414</td>
+      <td>15353</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Italy</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea hypovirus 5a</td>
+      <td>Kst14A</td>
+      <td>OP328160</td>
+      <td>10683</td>
+      <td>Complete</td>
+      <td>Hypoviridae</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Pakistan</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>HAZ1 1</td>
+      <td>LN827940</td>
+      <td>2873</td>
+      <td>Complete</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>HAZ3 1</td>
+      <td>LN827944</td>
+      <td>2820</td>
+      <td>Complete</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>NaN</td>
+      <td>EF580100</td>
+      <td>2804</td>
+      <td>Complete</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>China</td>
+      <td>Botrytis cinerea</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>BCS1 DN4879</td>
+      <td>MT119677</td>
+      <td>2788</td>
+      <td>Complete</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Spain</td>
+      <td>Botrytis cinerea</td>
+      <td>2018</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>BcNSW1</td>
+      <td>NaN</td>
+      <td>1433</td>
+      <td>Partial</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2020</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>BcQ3</td>
+      <td>NaN</td>
+      <td>2795</td>
+      <td>Partial</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2017</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>BcQ1</td>
+      <td>NaN</td>
+      <td>2631</td>
+      <td>Partial</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>2000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>BcV2</td>
+      <td>NaN</td>
+      <td>2763</td>
+      <td>Partial</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Australia</td>
+      <td>Botrytis cinerea</td>
+      <td>1992</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>Botrytis cinerea mitovirus 1</td>
+      <td>Bc2021 9</td>
+      <td>PP599403</td>
+      <td>2217</td>
+      <td>Partial</td>
+      <td>Mitoviridae</td>
+      <td>Duamitovirus</td>
+      <td>Duamitovirus boci1</td>
+      <td>Canada</td>
+      <td>Botrytis cinerea</td>
+      <td>2022</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>

@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dsRNA Mycoviruses Information</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+    <style>
+        /* Page styles */
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #2d2d2d;
+        }
+        h1, h2, h3 {
+            color: #155e3b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        
+          /* Visualizer styles */
+        #sequence-alignment-visualization { margin-top: 18px; }
+        #controls { display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+        #container { border:1px solid #ccc; width:100%; height:520px; overflow:auto; position:relative; background:white; }
+        canvas { display:block; }
+        textarea { width:100%; height:120px; font-family: monospace; }
+        label { font-size: 14px; }
+        .small { font-size: 13px; color:#555; }
+        #tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,0.8); color: white; padding:6px 8px; font-size: 12px; border-radius:4px; display:none; z-index:10; }
+        #legend { margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+        .swatch { display:inline-flex; align-items:center; gap:6px; padding:4px 6px; border-radius:4px; background:#f6f6f6; border:1px solid #eee; }
+        .dot { width:14px; height:14px; border-radius:2px; display:inline-block; }
+        section { margin-bottom:18px; }
+		
+		 body { font-family: "Segoe UI", Roboto, Arial, sans-serif; margin: 12px; color:#222; }
+  header { margin-bottom: 8px; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px; }
+  .controls label { font-size:13px; color:#333; }
+  .controls input[type="text"], .controls input[type="url"], .controls select { padding:6px; font-size:13px; }
+  #viewer { border: 1px solid #dedede; background: #fff; overflow:auto; }
+  svg { display:block; }
+  .link { fill:none; stroke:#999; stroke-width:1.1px; }
+  .link.highlight { stroke:#d62728; stroke-width:2.5px; }
+  .node circle { stroke:#333; stroke-width:0.8px; fill:#fff; }
+  .node text { font-size:12px; pointer-events:none; }
+  .node .label { cursor:pointer; fill:#111; }
+  .node .meta { font-size:11px; fill:#666; }
+  #tooltip {
+    position: absolute; pointer-events:none; padding:6px 8px; border-radius:4px; background:rgba(0,0,0,0.8);
+    color:#fff; font-size:12px; display:none; z-index:1000;
+  }
+  .small { font-size:12px; color:#666; }
+  button { padding:6px 10px; font-size:13px; cursor:pointer; }
+  .note { margin-top:8px; font-size:12px; color:#444; }
+    </style>
+</head>
+<body>
+    <h2>ssRNA(+) Mycoviruses</h2>
+
+Mycoviruses with positive-sense, single-stranded RNA ((+)ssRNA) genomes represent a significant portion of known fungal viruses and are found across various fungal taxa. Unlike many plant and animal viruses, most ssRNA mycoviruses do not form true, rigid virions; instead, their RNA genomes often exist as "naked" nucleocapsids within host-derived lipid vesicles. These viruses replicate entirely in the host cytoplasm or specific organelles like mitochondria.
+    
+	<h3>Diversity and prevalence</h3>
+The viruses listed belong to several distinct families, not all of which exclusively contain mycoviruses or have a definitive ssRNA(+) genome; some families also include plant- or animal-infecting species, and some lack a traditional capsid protein gene. Notable exceptions on the list include <em>Flexiviridae</em>, <em>Togaviridae</em>, and <em>Tombusviridae</em>, which are primarily considered plant or animal virus families but share evolutionary links with mycoviruses and may have mycovirus-like relatives discovered through metagenomics.
+
+    <h3>Families and characteristics</h3>
+
+ <table>
+    <thead>
+        <tr>
+            <th>Family / Group</th>
+            <th>Genome Structure</th>
+            <th>Characteristics</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Alphaflexiviridae</td>
+            <td>Linear, monopartite, (5.4–9 kb)</td>
+            <td>Flexuous filamentous virions in some genera; others are non-encapsidated. Infects plants or plant-pathogenic fungi. Encodes replicase, and sometimes a coat protein (CP) and/or movement proteins.</td>
+        </tr>
+        <tr>
+            <td>Botourmiaviridae</td>
+            <td>Linear, mono- or tri-segmented, (0.9–3.2 kb for mycoviruses)</td>
+            <td>Fungal members are typically non-encapsidated with a monopartite genome encoding only an RdRp. Plant members have bacilliform virions and a tri-segmented genome.</td>
+        </tr>
+        <tr>
+            <td>Deltaflexiviridae</td>
+            <td>Linear, monopartite, (6–8 kb)</td>
+            <td>Viruses of fungi; virions not yet observed (may be capsidless). Genome encodes a large replicase polyprotein.</td>
+        </tr>
+        <tr>
+            <td>Flexiviridae</td>
+            <td>Linear, monopartite,  (6–9 kb)</td>
+            <td>Historically a plant virus family; some related fungal viruses exist. Virions are flexuous filaments.</td>
+        </tr>
+        <tr>
+            <td>Fusariviridae</td>
+            <td>Linear, monopartite, (5.9–10.7 kb)</td>
+            <td>Capsidless. Genome is typically bicistronic (up to four ORFs) encoding an RdRp-Hel fusion protein and a second protein of unknown function.</td>
+        </tr>
+        <tr>
+            <td>Gammaflexiviridae</td>
+            <td>Linear, monopartite,  (6.8–9.5 kb)</td>
+            <td>Flexuous filamentous virions. Primarily mycoviruses, related to plant viruses. Encodes a polyprotein with replicase motifs and a CP.</td>
+        </tr>
+        <tr>
+            <td>Hypoviridae</td>
+            <td>Linear, monopartite, (7.3–18.3 kb)</td>
+            <td>Capsidless; associated with host lipid vesicles. Genome has one or two ORFs translated by non-canonical mechanisms (IRES, stop/restart). Known for causing hypovirulence in host fungi.</td>
+        </tr>
+        <tr>
+            <td>Hypoviridae_satellite</td>
+            <td>Associated with hypoviruses</td>
+            <td>Refers to satellite-like RNAs found with hypoviruses; not a formal family.</td>
+        </tr>
+        <tr>
+            <td>Mitoviridae</td>
+            <td>Linear, monopartite,  (2.0–4.5 kb)</td>
+            <td>Capsidless. Smallest/simplest mycoviruses, located exclusively in mitochondria. Encodes a single RdRp protein using the mitochondrial genetic code.</td>
+        </tr>
+        <tr>
+            <td>Mycoalphaviridae</td>
+            <td>N/A (proposed related group)</td>
+            <td>Refers to mycoviruses phylogenetically related to animal alphaviruses, often with single ORF genomes.</td>
+        </tr>
+        <tr>
+            <td>Narnaviridae</td>
+            <td>Linear, monopartite,  (2.3–3.6 kb)</td>
+            <td>Capsidless. Located in the host cytoplasm. Encodes a single RdRp protein.</td>
+        </tr>
+        <tr>
+            <td>Orfanplasmoviridae</td>
+            <td>N/A (unclassified related group)</td>
+            <td>Proposed family/group for unclassified viruses found in metatranscriptomic studies.</td>
+        </tr>
+        <tr>
+            <td>Splipalmiviridae</td>
+            <td>N/A (unclassified related group)</td>
+            <td>Proposed family/group for unclassified viruses found in metatranscriptomic studies.</td>
+        </tr>
+        <tr>
+            <td>Togaviridae</td>
+            <td>Linear, monopartite, (10–12 kb)</td>
+            <td>Primarily enveloped animal (arthropod-borne) viruses. Mycovirus relatives have been found but are unclassified within this formal family.</td>
+        </tr>
+        <tr>
+            <td>Tombusviridae</td>
+            <td>Linear, monopartite, (3.7–5.4 kb)</td>
+            <td>Primarily non-enveloped plant viruses. Some mycoviruses (e.g., in Ambiguiviridae proposed family) are phylogenetically related.</td>
+        </tr>
+        <tr>
+            <td>Tymoviridae</td>
+            <td>Linear, monopartite, (6.0–7.5 kb)</td>
+            <td>Primarily plant viruses with isometric virions. Mycovirus relatives (Mycotymovirus proposed genus) are known.</td>
+        </tr>
+        <tr>
+            <td>Yadokariviridae</td>
+            <td>Linear, monopartite, (3.6–6.3 kb)</td>
+            <td>Capsidless per se; requires a co-infecting dsRNA virus to provide capsids (trans-encapsidation)</td>
+        </tr>
+    </tbody>
+</table>
+
+    <h3>Effects on fungal host</h3>
+
+Many mycoviruses, especially members of the Hypoviridae family, are associated with reduced fungal growth, abnormal colony morphology, decreased sporulation, and a significant reduction in virulence towards a plant host. This phenomenon is known as hypovirulence
+
+Hypovirulence-associated mycoviruses have gained attention as potential biological control agents against plant pathogenic fungi, such as the use of Cryphonectria hypovirus 1 to manage chestnut blight in Europe. Some mycoviruses can even turn a pathogenic fungus into a beneficial endophyte that promotes plant growth. Most mycovirus infections are latent or asymptomatic, causing no obvious harm to their fungal hosts under normal conditions.
+	
+	<h3>Ecological significance and impact</h3>
+	
+The ecological significance of mycoviruses is substantial, primarily due to their effects on host fitness and virulence.
+	
+Mycoviruses typically lack an extracellular phase and are primarily transmitted intracellularly through hyphal fusion (horizontal transmission) and via spores (vertical transmission). The presence of related viruses in both fungi and plants suggests frequent cross-kingdom viral transfers, likely facilitated by the close physical association between plant hosts and pathogenic fungi, highlighting dynamic evolutionary processes.
+
+<h3>Evolutionary considerations</h3>
+Studying mycovirus evolution is essential for understanding viral diversity and for developing biocontrol strategies using hypovirulent viruses. Some (+)ssRNA mycoviruses, such as BdBV1, appear to have independently evolved segmented genomes, which may increase diversity through reassortment. Botrexviruses also resemble plant allexiviruses, suggesting an origin from ancestral plant viruses. Horizontal gene transfer between viruses and hosts—and across kingdoms—is a major force in viral evolution, with recent mycovirus discoveries helping fill important evolutionary gaps. 
+
+<h3>The RdRp's Role in Evolution</h3>
+RNA mycovirus genome is less than 15 kilobases (kb) in length and encodes a maximum of 12 proteins, including an RNA-dependent RNA polymerase (RdRp), which is responsible for replicating viral RNA. Currently, phylogenetic analysis of the nucleotide sequences of RdRp enzymes in RNA viruses is the accepted standard for the correct categorization of mycoviruses.
+Some RdRps are linked to hypovirulence (reduced fungal pathogenicity), making them targets for developing fungal disease biocontrol agents.
+
+    <!-- Sequence Alignment Visualization section (embedded visualizer) -->
+    <section id="sequence-alignment" aria-labelledby="sav-heading">
+      <h3 id="sav-heading">Sequence Alignment Visualization</h3>
+
+      <div id="controls">
+        <input id="fileInput" type="file" accept=".fa,.fasta,.txt" />
+        <button id="loadSample">Load sample MSA</button>
+        <label class="small">Cell size:
+          <input id="cellSize" type="range" min="6" max="28" value="14" />
+        </label>
+        <label class="small">Show letters:
+          <input id="showLetters" type="checkbox" checked />
+        </label>
+        <label class="small">Color scheme:
+          <select id="colorScheme">
+            <option value="bases">By base (A/C/G/T)</option>
+            <option value="identity">Identity to reference (row 0)</option>
+          </select>
+        </label>
+        <button id="pasteAreaToggle">Toggle paste area</button>
+      </div>
+
+      <div id="pasteArea" style="display:none; margin-bottom:8px;">
+        <div class="small">Paste an aligned FASTA (equal-length sequences) and click "Render":</div>
+        <textarea id="fastaText"></textarea>
+        <div style="margin-top:6px;">
+          <button id="renderFromText">Render pasted FASTA</button>
+        </div>
+      </div>
+
+      <div id="container" aria-live="polite">
+        <canvas id="msaCanvas"></canvas>
+        <div id="tooltip" role="status" aria-hidden="true"></div>
+      </div>
+
+      <div id="legend" aria-hidden="false">
+        <div class="swatch"><span class="dot" id="colA"></span>A</div>
+        <div class="swatch"><span class="dot" id="colC"></span>C</div>
+        <div class="swatch"><span class="dot" id="colG"></span>G</div>
+        <div class="swatch"><span class="dot" id="colT"></span>T</div>
+        <div class="swatch"><span class="dot" id="colDash"></span>Gap (-)</div>
+        <div style="margin-left:12px;" class="small">Hover to inspect a cell. Labels are shown on the left. Use file upload or paste FASTA. Zoom via cell size.</div>
+      </div>
+    </section>
+    <script>
+       // Minimal MSA visualizer (client-only) with labels on the left and integrated into the page.
+      const canvas = document.getElementById('msaCanvas');
+      const ctx = canvas.getContext('2d');
+      const container = document.getElementById('container');
+      const tooltip = document.getElementById('tooltip');
+
+      const fileInput = document.getElementById('fileInput');
+      const loadSample = document.getElementById('loadSample');
+      const cellSizeInput = document.getElementById('cellSize');
+      const showLettersCheckbox = document.getElementById('showLetters');
+      const colorSchemeSelect = document.getElementById('colorScheme');
+      const pasteToggle = document.getElementById('pasteAreaToggle');
+      const pasteArea = document.getElementById('pasteArea');
+      const fastaText = document.getElementById('fastaText');
+      const renderFromText = document.getElementById('renderFromText');
+
+      // Example small aligned FASTA (equal length)
+      const sampleFASTA = `
+>MG554633.1| Botrytis cinerea fusarivirus 1 |Fusariviridae
+----CATTACTACCATGTCTAACTACACCAAATCCAACGCCAAC-----ACCATG-----
+--------AACCAATCACCACGAAACAAAATAACAAACATCATTGATTC----TGTTGCT
+CTCGAGGCTAACAACAGAATCATGACTCTCGAAAAAGCCTCGAAAAACAAACAAAAACAA
+CAAACAAAATCACAAGGAACTGATGAAATGGAGGTCAGCTCTCTTGGTAATAGATCTTTA
+------------ACCCATACCACTGGCCACT-----------------------------
+---------TGACACCACGAGCCTCTAACTCCAACAGCATCGACAGTAACAGCGT-----
+----------------------------------------------CAACCACAACCGCT
+ACAAGGGGCCTTTTGCTACTTTAGCTATGGATGAACCACTGCCAAGTGACCGGGTAGAGC
+G-------------------------TGAGACAGCAACCGATTTCGCTGAC---------
+----------------ATCGGATTGTCGTCGGGTAATTCT----GACAAAGCAAA--TGC
+>MG554632.1| Botrytis cinerea hypovirus 1 | Hypoviridae
+--ACCACTACAACCATGTCCAACTACACCAAAACCAACACCAAC-----ACCATG-----
+--------AACCAATCACCACGAAATAAAATAACAAACATTATTGATTC----TGTTGCT
+CTCGAGGCTAACAACAGAATCATGACTCTCGAAAAAGCCTCGAAAAACAAACAAAAACAA
+CAAACAAAAAATCAATTAATTGATGAAACTAAGGTCGATACACTTGACAGTCGATCTTTA
+------------ACCCATACCACTAATCATT-----------------------------
+---------TGACACAACCGCTTTCTGTCTTCGGTGGTGTTGACGGTAACAGCGT-----
+----------------------------------------------CAACCACAACCGCT
+ACAAAGGGCCGTTGGCCACTTTAGCTATGGACGAAACACCGCCACAAGACCGCGTGGAGC
+G-------------------------TAACGCAGCGACTGATTTCGCTGAT---------
+----------------ATTGAATTATCATCCAGTACACCT----GATAAGTCAAA--TGC
+>PV443073.1|Botrytis cinerea alpha-like virus 1|Mycoalphaviridae
+--ACCATTACTACCATGCCCCGCTACGTCAACAGCAACAATACCAGT-AACCATGGCCAA
+CCAACAACAACCAAGC-AAACAAATTCAACAAACAACAAACAACCACAC-------TGCT
+CCAGAGGCAGGCAGTGCGGTTGTGACACTCGAAGATGCCTCTACAATATTAACAAAACAA
+CAACAACAAGAAAACAACACAAATAGTGCTACGAATGATAATTATGATAGCAATTTTAAG
+CCTAAACACGTCACCCAGGCTAATACATATTCTGAGCTGTCATCTAGCAACACAATTGTT
+GGTAACAAACGACACGACCAAGTTACGCGTAATTTGGTGCCAACG-CACCAG--------
+---------GCTATCGGATTTGGTAAGGATGGCCTGGGCATCTATACTACAGCAACTGGT
+TTCAAGGGACCATGTGCAACGCTTGTGAACAACAACAGTACAAAAACGTTAGATGATACC
+ATGTCAGCAAGACCGCAGACGCCAGCTAAAAAACCGAGTGGTAGCACCAAAGTGCCAACA
+AACTTTTCAGACATAGATTTGAGTAGTAGTGGCGACAACCTGCGAACAGGACAGT-----
+>MN625250.1|Botrytis cinerea alpha-like virus 1|Togaviridae
+TATAATTAACTACTACCTACAATCAATCTATCACTAACCACACCAATCAACCATGTCTTA
+CCA-----AACCGCTG-CCACAAATTCAAACAACAACAAGAGGAGTCTC-------GGCC
+TCCTCCCTAAATATATGCCGAGAAAAAATATGTCGCGTTCTGATGATTTCATCAATAT--
+--------GGATAGCGACATTTATACTATGACCAAT----AGTATGACATCCAGATACAA
+TCAGCCCAAGATATCGAAACTTAGCACTTCTCTGAG------------------------
+----AATAATGAGAGAAGATGTATATGGGCCACTTGGTGCAATTAGTACCAGAAGGAACC
+ATGTGTATAAAGATTTGATATGCCATAAATGTCTTG---ATAAACACAACAAAACATGTT
+CGGATGAAGATGGGCTAACTTACAGTAACTACGTAAAATACAAAAATGATATTAAAAGCC
+G-------------------------CAAAACAATTGGTGGGTTTATCTACAAGTCTTAT
+TTCCACTTGAAACTCGATTGTGAAATCATTGGTAAC--------TATAAGCCTGTCTTTC
+>MN954874.1|Sclerotinia sclerotiorum deltaflexivirus 2| Deltaflexiviridae
+TATAATTAACTACTACCTACAATCAATCTATCACTAACCACACCAATCAACCATGTCTTA
+CCA-----AACCGCTG-CCACAAATTCAAACAACAACAAGAGGAGTCTC-------GGCC
+TCCTCCCTAAATATATGCCGAGAAAAAATATGTCGCGTTCTGATGATTTCATCAATAT--
+--------GGATAGCGACATTTATACTATGACCAAT----AGTATGACATCCAGATACAA
+TCAGCCCAAGATATCGAAACTTAGCACTTCTCTGAG------------------------
+----AATAATGAGAGAAGATGTATATGGGCCACTTGGTGCAATTAGTACCAGAAGGAACC
+ATGTGTATAAAGATTTGATATGCCATAAATGTCTTG---ATAAACACAACAAAACATGTT
+CGGATGAAGATGGGCTAACTTACAGTAACTACGTAAAATACAAAAATGATATTAAAAGCC
+G-------------------------CAAAACAATTGGTGGGTTTATCTACAAGTCTTAT
+TTCCACTTGAAACTCGATTGTGAAATCATTGGTAAC--------TATAAGCCTGTCTTTC`;
+      // Color maps (simple)
+      const baseColors = {
+        A: '#1f77b4', // blue
+        C: '#2ca02c', // green
+        G: '#ff7f0e', // orange
+        T: '#d62728', // red
+        U: '#9467bd', // purple (RNA)
+        N: '#7f7f7f', // gray
+        '-': '#f2f2f2' // gap light
+      };
+
+      // Fill legend swatches
+      document.getElementById('colA').style.background = baseColors.A;
+      document.getElementById('colC').style.background = baseColors.C;
+      document.getElementById('colG').style.background = baseColors.G;
+      document.getElementById('colT').style.background = baseColors.T;
+      document.getElementById('colDash').style.background = baseColors['-'];
+
+      let msa = { ids: [], seqs: [] }; // current alignment
+      let cellSize = parseInt(cellSizeInput.value, 10);
+      let showLetters = showLettersCheckbox.checked;
+      let colorScheme = colorSchemeSelect.value;
+
+      // store the computed left margin used in the last render (CSS pixels)
+      let currentLeftMargin = 80;
+
+      function parseFasta(text) {
+        const lines = text.split(/\r?\n/);
+        const ids = [];
+        const seqs = [];
+        let curId = null;
+        let curSeq = [];
+        for (let line of lines) {
+          line = line.trim();
+          if (!line) continue;
+          if (line.startsWith('>')) {
+            if (curId !== null) {
+              ids.push(curId);
+              seqs.push(curSeq.join('').toUpperCase());
+            }
+            curId = line.substring(1).trim() || `seq${ids.length+1}`;
+            curSeq = [];
+          } else {
+            curSeq.push(line.replace(/\s+/g, ''));
+          }
+        }
+        if (curId !== null) {
+          ids.push(curId);
+          seqs.push(curSeq.join('').toUpperCase());
+        }
+        return { ids, seqs };
+      }
+
+      function validateMSA(parsed) {
+        if (!parsed.ids.length) return 'No sequences found in FASTA.';
+        const len0 = parsed.seqs[0].length;
+        for (let i=0;i<parsed.seqs.length;i++) {
+          if (parsed.seqs[i].length !== len0) {
+            return `Sequence lengths differ: sequence ${i} length ${parsed.seqs[i].length} != ${len0}. Please provide aligned sequences of equal length.`;
+          }
+        }
+        return null;
+      }
+
+      function computeLeftMargin(fontSize) {
+        // Use an offscreen canvas to measure text width in CSS pixels
+        const measureCtx = document.createElement('canvas').getContext('2d');
+        measureCtx.font = `${fontSize}px sans-serif`;
+        let maxW = 0;
+        for (let id of msa.ids) {
+          const w = measureCtx.measureText(id).width;
+          if (w > maxW) maxW = w;
+        }
+        const min = 60;
+        return Math.max(min, Math.ceil(maxW + 16)); // padding to the right
+      }
+
+      function render() {
+        if (!msa.ids.length) {
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          return;
+        }
+        const rows = msa.seqs.length;
+        const cols = msa.seqs[0].length;
+
+        cellSize = parseInt(cellSizeInput.value,10);
+        showLetters = showLettersCheckbox.checked;
+        colorScheme = colorSchemeSelect.value;
+
+        const cellW = cellSize;
+        const cellH = Math.max(18, Math.round(cellSize * 1.1));
+        const rulerHeight = 22;
+
+        // compute left margin based on label font size
+        const labelFontSize = Math.max(12, cellSize - 2);
+        const leftMargin = computeLeftMargin(labelFontSize);
+        currentLeftMargin = leftMargin;
+
+        const colsWidth = cols * cellW;
+        const canvasCssWidth = leftMargin + colsWidth;
+        const canvasCssHeight = rows * cellH + rulerHeight;
+
+        // High-DPI handling
+        const dpr = window.devicePixelRatio || 1;
+        canvas.style.width = canvasCssWidth + 'px';
+        canvas.style.height = canvasCssHeight + 'px';
+        canvas.width = Math.max(1, Math.floor(canvasCssWidth * dpr));
+        canvas.height = Math.max(1, Math.floor(canvasCssHeight * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        ctx.clearRect(0,0,canvasCssWidth,canvasCssHeight);
+
+        // Draw ruler area (shifted right by leftMargin)
+        ctx.fillStyle = '#fafafa';
+        ctx.fillRect(leftMargin, 0, colsWidth, rulerHeight);
+        ctx.strokeStyle = '#ddd';
+        ctx.beginPath();
+        ctx.moveTo(leftMargin, rulerHeight-0.5);
+        ctx.lineTo(leftMargin + colsWidth, rulerHeight-0.5);
+        ctx.stroke();
+
+        ctx.fillStyle = '#333';
+        ctx.font = `${Math.max(10, cellSize-2)}px sans-serif`;
+        ctx.textBaseline = 'middle';
+        // draw tick labels every N positions depending on cell width
+        const tickStep = cellW >= 12 ? 1 : Math.max(1, Math.ceil(10 / (cellW / 6)));
+        for (let c = 0; c < cols; c++) {
+          if ((c+1) % tickStep === 0) {
+            const x = leftMargin + c * cellW + cellW/2;
+            const txt = (c+1).toString();
+            const w = ctx.measureText(txt).width;
+            ctx.fillText(txt, x - (w/2), rulerHeight/2);
+          }
+        }
+
+        // Draw left label background
+        ctx.fillStyle = '#f8f8f8';
+        ctx.fillRect(0, rulerHeight, leftMargin, rows * cellH);
+        ctx.strokeStyle = '#eee';
+        ctx.beginPath();
+        ctx.moveTo(leftMargin - 0.5, rulerHeight);
+        ctx.lineTo(leftMargin - 0.5, rulerHeight + rows * cellH);
+        ctx.stroke();
+
+        // Precompute reference row for identity coloring if chosen
+        let refSeq = null;
+        if (colorScheme === 'identity') {
+          refSeq = msa.seqs[0]; // row 0 is reference
+        }
+
+        // Draw rows and cells
+        ctx.font = `${Math.max(10, cellSize-2)}px monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        for (let r = 0; r < rows; r++) {
+          const y = rulerHeight + r * cellH;
+          // optional alternating background
+          if (r % 2 === 1) {
+            ctx.fillStyle = '#fbfbfb';
+            ctx.fillRect(leftMargin, y, colsWidth, cellH);
+          }
+
+          const seq = msa.seqs[r];
+          for (let c = 0; c < cols; c++) {
+            const base = seq[c] || 'N';
+            let color;
+            if (colorScheme === 'bases') {
+              color = baseColors[base] || baseColors['N'];
+            } else if (colorScheme === 'identity') {
+              const refBase = (refSeq && refSeq[c]) ? refSeq[c] : null;
+              color = (refBase && base === refBase) ? '#b6e6b6' : '#f6bdbd'; // greenish vs redish
+            } else {
+              color = baseColors[base] || baseColors['N'];
+            }
+            // Draw cell at shifted x
+            const x = leftMargin + c * cellW;
+            ctx.fillStyle = color;
+            ctx.fillRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
+
+            // Draw letter if enabled and cell wide enough
+            if (showLetters && cellW >= 8) {
+              ctx.fillStyle = (base === '-' ? '#666' : 'white');
+              if (color === '#f2f2f2') ctx.fillStyle = '#333';
+              ctx.fillText(base, x + cellW/2, y + cellH/2 + 1);
+            }
+          }
+
+          // Draw sequence id in the left margin (right-aligned)
+          ctx.fillStyle = '#222';
+          ctx.textAlign = 'right';
+          ctx.font = `${labelFontSize}px sans-serif`;
+          ctx.fillText(msa.ids[r], leftMargin - 8, y + cellH/2);
+          ctx.textAlign = 'center';
+        }
+      }
+
+      // Mouse interactions: show tooltip with id, position, base (account for left margin)
+      container.addEventListener('mousemove', (ev) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = ev.clientX - rect.left;
+        const y = ev.clientY - rect.top;
+        if (!msa.ids.length) {
+          tooltip.style.display = 'none';
+          tooltip.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        const cellW = cellSize;
+        const cellH = Math.max(18, Math.round(cellSize * 1.1));
+        const rulerHeight = 22;
+        if (y < rulerHeight || x < currentLeftMargin) {
+          tooltip.style.display = 'none';
+          tooltip.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        const col = Math.floor((x - currentLeftMargin) / cellW);
+        const row = Math.floor((y - rulerHeight) / cellH);
+        if (row < 0 || row >= msa.seqs.length || col < 0 || col >= msa.seqs[0].length) {
+          tooltip.style.display = 'none';
+          tooltip.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        const base = msa.seqs[row][col] || 'N';
+        tooltip.style.display = 'block';
+        tooltip.setAttribute('aria-hidden', 'false');
+        tooltip.style.left = (ev.clientX + 12) + 'px';
+        tooltip.style.top = (ev.clientY + 12) + 'px';
+        tooltip.innerHTML = `<strong>${msa.ids[row]}</strong><br>pos: ${col+1} &nbsp; base: <code>${base}</code>`;
+      });
+
+      container.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+        tooltip.setAttribute('aria-hidden', 'true');
+      });
+
+      // File upload handling
+      fileInput.addEventListener('change', (ev) => {
+        const f = ev.target.files && ev.target.files[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target.result;
+          const parsed = parseFasta(text);
+          const err = validateMSA(parsed);
+          if (err) {
+            alert(err);
+            return;
+          }
+          msa = parsed;
+          render();
+          // scroll container to top-left
+          container.scrollTo({ left: 0, top: 0 });
+        };
+        reader.readAsText(f);
+      });
+
+      // Paste area
+      pasteToggle.addEventListener('click', () => {
+        pasteArea.style.display = pasteArea.style.display === 'none' ? 'block' : 'none';
+      });
+      renderFromText.addEventListener('click', () => {
+        const text = fastaText.value.trim();
+        if (!text) { alert('Paste FASTA text first.'); return; }
+        const parsed = parseFasta(text);
+        const err = validateMSA(parsed);
+        if (err) { alert(err); return; }
+        msa = parsed;
+        render();
+        container.scrollTo({ left: 0, top: 0 });
+      });
+
+      // Load sample
+      loadSample.addEventListener('click', () => {
+        const parsed = parseFasta(sampleFASTA);
+        const err = validateMSA(parsed);
+        if (err) { alert(err); return; }
+        msa = parsed;
+        render();
+        container.scrollTo({ left: 0, top: 0 });
+      });
+
+      // Controls changes
+      cellSizeInput.addEventListener('input', () => {
+        render();
+      });
+      showLettersCheckbox.addEventListener('change', render);
+      colorSchemeSelect.addEventListener('change', render);
+
+      // Initial load
+      (() => {
+        const parsed = parseFasta(sampleFASTA);
+        const err = validateMSA(parsed);
+        if (!err) {
+          msa = parsed;
+          render();
+        }
+      })();
+
+      // Resize handling: re-render on container resize to ensure correct styles
+      let resized;
+      window.addEventListener('resize', () => {
+        clearTimeout(resized);
+        resized = setTimeout(render, 150);
+      });
+    </script>
+	
+	 <h2 style="margin:0 0 6px 0">Phylogeny</h2>
+  <div class="controls" role="region" aria-label="controls">
+    <label>Newick file <input id="fileInput" type="file" accept=".nwk,.newick,.txt" /></label>
+    <label>or URL <input id="urlInput" type="url" placeholder="https://example.com/tree.nwk" style="width:260px" /></label>
+    <button id="loadUrl">Load URL</button>
+
+    <label>Layout
+      <select id="layoutSelect">
+        <option value="rectangular" selected>Rectangular (horizontal)</option>
+        <option value="radial">Radial</option>
+      </select>
+    </label>
+
+    <label>Cell width <input id="scaleK" type="range" min="0.5" max="3" step="0.05" value="1" title="scale branch-lengths" /></label>
+
+    <label>Collapse internal on click <input id="collapseToggle" type="checkbox" checked /></label>
+
+    <label>Search <input id="search" type="text" placeholder="accession, organism, strain..." /></label>
+    <button id="btnSearch">Find</button>
+
+    <button id="exportSVG">Export SVG</button>
+  </div>
+
+  <div class="small">Tips: load a Newick file or URL. The viewer uses branch lengths (if present). Click node labels to collapse/uncollapse. Hover nodes for metadata tooltip. Use the Search to jump to a label.</div>
+</header>
+
+<div id="viewer" style="height:640px;">
+  <div id="tooltip" role="status" aria-hidden="true"></div>
+  <svg id="svgRoot" width="100%" height="640"></svg>
+</div>
+
+<script>
+/* Newick tree viewer (same implementation as before) with an example Newick tree auto-loaded.
+   Usage: open this file in a browser — the example tree will be displayed at load.
+*/
+
+/* ---------- Utilities (Newick parser & label metadata) ---------- */
+
+function parseNewick(s) {
+  s = s.trim();
+  let idx = 0;
+  function skipWs() { while (/\s/.test(s[idx])) idx++; }
+  function parseSubtree() {
+    skipWs();
+    if (s[idx] === '(') {
+      idx++;
+      const children = [];
+      while (true) {
+        children.push(parseSubtree());
+        skipWs();
+        if (s[idx] === ',') { idx++; continue; }
+        if (s[idx] === ')') { idx++; break; }
+        break;
+      }
+      skipWs();
+      const meta = parseNameAndLength();
+      return Object.assign({ children: children }, meta);
+    } else {
+      const meta = parseNameAndLength();
+      return meta;
+    }
+  }
+  function parseNameAndLength() {
+    skipWs();
+    let name = '';
+    while (idx < s.length && ![':', ',', ')', ';'].includes(s[idx])) { name += s[idx++]; }
+    name = name.trim();
+    let length = null;
+    skipWs();
+    if (s[idx] === ':') {
+      idx++;
+      skipWs();
+      const numMatch = s.substring(idx).match(/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?/);
+      if (numMatch) {
+        length = parseFloat(numMatch[0]);
+        idx += numMatch[0].length;
+      } else {
+        let t = '';
+        while (idx < s.length && ![',', ')', ';'].includes(s[idx])) { t += s[idx++]; }
+        t = t.trim();
+        if (t) length = parseFloat(t) || null;
+      }
+    }
+    return { name: name || null, length: length };
+  }
+  const root = parseSubtree();
+  skipWs();
+  if (s[idx] === ';') idx++;
+  return root;
+}
+
+function parseLabelMetadata(label) {
+  if (!label) return { id: '', meta: {} };
+  let id = label;
+  const meta = {};
+  const bracketRe = /\[([^\]]+)\]/g;
+  let m;
+  while ((m = bracketRe.exec(label)) !== null) {
+    const inside = m[1];
+    const eqIdx = inside.indexOf('=');
+    if (eqIdx > -1) {
+      const key = inside.slice(0, eqIdx).trim();
+      const value = inside.slice(eqIdx + 1).trim();
+      meta[key] = value;
+    } else {
+      meta[`note${Object.keys(meta).length+1}`] = inside.trim();
+    }
+  }
+  id = id.replace(/\[[^\]]+\]/g, '').trim();
+  if (id.includes('|')) {
+    const parts = id.split('|').filter(Boolean);
+    if (parts.length >= 2) id = parts[1];
+  }
+  return { id: id || '', meta };
+}
+
+/* ---------- Helpers for layout & rendering ---------- */
+
+function computeCumLengths(node, parentCum = 0) {
+  const len = (node.length != null && !isNaN(node.length)) ? node.length : 0;
+  node.cumLength = parentCum + len;
+  let max = node.cumLength;
+  if (node.children) {
+    for (const c of node.children) {
+      const m = computeCumLengths(c, node.cumLength);
+      if (m > max) max = m;
+    }
+  }
+  return max;
+}
+function makeYScale(start, end, count) {
+  const range = end - start;
+  const step = count > 1 ? range / (count - 1) : 0;
+  let i = 0;
+  return { next: () => start + step * (i++), step, count };
+}
+
+/* ---------- Rendering (D3) ---------- */
+
+const svg = d3.select("#svgRoot");
+const tooltipEl = document.getElementById('tooltip');
+let rootNode = null;
+let settings = { layout: 'rectangular', collapseOnClick: true, scaleK: 1 };
+
+const groot = svg.append('g').attr('class', 'groot');
+svg.call(d3.zoom().scaleExtent([0.2,8]).on('zoom', (event) => {
+  groot.attr('transform', event.transform);
+}));
+
+function buildHierarchy(parsed) {
+  function rec(n) {
+    const obj = { name: n.name || '', length: (typeof n.length === 'number') ? n.length : (n.length ? parseFloat(n.length) : null), raw: n };
+    if (n.children && n.children.length) obj.children = n.children.map(rec);
+    return obj;
+  }
+  return rec(parsed);
+}
+function toggleCollapse(node) {
+  if (node.children) { node._children = node.children; node.children = null; }
+  else if (node._children) { node.children = node._children; node._children = null; }
+  update(rootNode);
+}
+
+function parseAndRender(newickText) {
+  try {
+    const parsed = parseNewick(newickText);
+    const hier = buildHierarchy(parsed);
+    function walk(n) {
+      const pm = parseLabelMetadata(n.name || '');
+      n.label = pm.id || '';
+      n.meta = pm.meta || {};
+      if (n.children) n.children.forEach(walk);
+    }
+    walk(hier);
+    rootNode = d3.hierarchy(hier, d => d.children);
+    computeCumLengths(rootNode.data, 0);
+    update(rootNode);
+  } catch (err) {
+    alert("Failed to parse Newick: " + err.message);
+    console.error(err);
+  }
+}
+
+function update(rootHierarchy) {
+  const svgRect = document.getElementById('viewer').getBoundingClientRect();
+  const width = Math.max(800, svgRect.width);
+  const height = Math.max(200, svgRect.height);
+
+  groot.selectAll('*').remove();
+
+  computeCumLengths(rootHierarchy.data, 0);
+
+  const leaves = rootHierarchy.leaves();
+  const leafCount = leaves.length;
+  const topPadding = 12;
+  const bottomPadding = 12;
+  const availableHeight = height - topPadding - bottomPadding;
+  const yScale = makeYScale(topPadding, topPadding + availableHeight, leafCount);
+
+  for (let i = 0; i < leaves.length; i++) { leaves[i].y = yScale.next(); }
+  rootHierarchy.eachAfter(d => { if (!d.children || d.children.length === 0) return; d.y = d.children.reduce((s, c) => s + c.y, 0) / d.children.length; });
+
+  const maxCum = d3.max(rootHierarchy.descendants(), n => n.data.cumLength || 0) || 0;
+  const k = Math.max(0.1, +document.getElementById('scaleK').value || 1) * settings.scaleK;
+  const leftMetaWidth = computeMetaWidth();
+  const rightPadding = 40;
+  const xScale = d3.scaleLinear().domain([0, maxCum || 1]).range([leftMetaWidth + 10, width - rightPadding]);
+
+  drawMetaHeader(leftMetaWidth);
+  drawMetaCells(rootHierarchy, leftMetaWidth);
+
+  const linksG = groot.append('g').attr('class', 'links');
+  const nodesG = groot.append('g').attr('class', 'nodes');
+
+  rootHierarchy.each(d => { d.x = xScale(d.data.cumLength || 0); });
+
+  const links = rootHierarchy.links();
+  linksG.selectAll('path.link')
+    .data(links, d => d.target.data.name + (d.target.data.cumLength || 0))
+    .join('path')
+    .attr('class', 'link')
+    .attr('d', d => {
+      const sx = d.source.x, sy = d.source.y;
+      const tx = d.target.x, ty = d.target.y;
+      return `M${sx},${sy}C${(sx+tx)/2},${sy} ${(sx+tx)/2},${ty} ${tx},${ty}`;
+    })
+    .attr('stroke', '#9aa')
+    .attr('fill', 'none');
+
+  const nodeSel = nodesG.selectAll('g.node')
+    .data(rootHierarchy.descendants(), d => d.data.name + (d.data.cumLength||0))
+    .join('g')
+    .attr('class', 'node')
+    .attr('transform', d => `translate(${d.x},${d.y})`)
+    .style('cursor', d => (d.children || d._children) ? 'pointer' : 'default')
+    .on('click', (event, d) => { if (!document.getElementById('collapseToggle').checked) return; toggleCollapse(d); })
+    .on('mouseover', (event, d) => {
+      d3.selectAll('path.link').classed('highlight', l => { return (l.target === d || l.source === d) || isAncestorLink(l, d); });
+      showTooltip(event, d);
+    })
+    .on('mousemove', (event, d) => showTooltip(event, d))
+    .on('mouseout', (event, d) => { d3.selectAll('path.link').classed('highlight', false); hideTooltip(); });
+
+  nodeSel.append('circle').attr('r', d => d.children || d._children ? 4.2 : 3.3).attr('fill', d => d.children || d._children ? '#fff' : '#444');
+
+  nodeSel.append('text').attr('class', 'label').attr('x', 6).attr('y', 3)
+    .text(d => (d.children || d._children) ? (d.data.name ? '' : '') : (d.data.label || d.data.name))
+    .style('font-size', 12).style('fill', '#111');
+
+  nodeSel.append('text').attr('class', 'metaLabel').attr('x', 6).attr('y', -8)
+    .text(d => (d.children || d._children) ? (d.data.label || '') : '')
+    .style('font-size', 10).style('fill', '#777');
+
+  drawScaleAxis(xScale, leftMetaWidth);
+
+  function isAncestorLink(link, node) {
+    let cur = node;
+    while (cur.parent) {
+      if (cur.parent === link.source && cur === link.target) return true;
+      cur = cur.parent;
+    }
+    return false;
+  }
+}
+
+/* ---------- Metadata drawing (columns on the left) ---------- */
+
+const metaCols = [
+  { key: 'id', label: 'Accession', width: 140 },
+  { key: 'organism', label: 'Organism', width: 220 },
+  { key: 'isolate', label: 'Isolate', width: 120 },
+  { key: 'geo_loc_name', label: 'Location', width: 160 },
+  { key: 'collection_date', label: 'Year', width: 80 }
+];
+
+function computeMetaWidth() { return metaCols.reduce((s, c) => s + c.width, 0) + 12; }
+
+function drawMetaHeader(leftMetaWidth) {
+  const g = groot.append('g').attr('class', 'metaHeader');
+  g.append('rect').attr('x', 0).attr('y', 0).attr('width', leftMetaWidth).attr('height', 22).attr('fill', '#f5f5f5').attr('stroke', '#eee');
+  let x = 0;
+  for (const c of metaCols) {
+    g.append('text').attr('x', x + c.width / 2).attr('y', 22 / 2 + 1).attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .style('font-weight', '600').style('font-size', 12).text(c.label);
+    g.append('line').attr('x1', x + c.width - 0.5).attr('x2', x + c.width - 0.5).attr('y1', 0).attr('y2', 10000).attr('stroke', '#eee');
+    x += c.width;
+  }
+}
+
+function drawMetaCells(rootHierarchy, leftMetaWidth) {
+  const rows = rootHierarchy.descendants();
+  const cellH = Math.max(18, Math.round(+document.getElementById('scaleK')?.value || 12 * 1.1));
+  const g = groot.append('g').attr('class', 'metaCells');
+  for (const d of rows) {
+    const y = d.y;
+    let x = 0;
+    for (const c of metaCols) {
+      const value = (c.key === 'id') ? (d.data.label || d.data.name || '') : (d.data.meta[c.key] || 'NaN');
+      g.append('rect').attr('x', x).attr('y', y - (cellH / 2)).attr('width', c.width).attr('height', cellH)
+        .attr('fill', (d.depth % 2 === 1) ? '#fbfbfb' : '#fff');
+      g.append('text').attr('x', x + 6).attr('y', y + 1).attr('dominant-baseline', 'middle').attr('text-anchor', 'start')
+        .style('font-size', 11).style('fill', '#111').text(truncate(value, Math.floor(c.width / 7)));
+      g.append('line').attr('x1', x + c.width - 0.5).attr('x2', x + c.width - 0.5).attr('y1', y - (cellH/2)).attr('y2', y + (cellH/2)).attr('stroke', '#eee');
+      x += c.width;
+    }
+  }
+}
+function truncate(s, maxChars) { if (!s) return ''; s = String(s); if (s.length <= maxChars) return s; return s.slice(0, maxChars - 3) + '...'; }
+
+/* ---------- Scale axis ---------- */
+
+function drawScaleAxis(xScale, leftMetaWidth) {
+  const axisG = groot.append('g').attr('transform', `translate(0, 12)`).attr('class', 'axisG');
+  const axisScale = xScale.copy();
+  const ticks = axisScale.ticks ? axisScale.ticks(5) : d3.scaleLinear().domain(axisScale.domain()).ticks(5);
+  const y = 0;
+  axisG.append('line').attr('x1', axisScale.range()[0]).attr('x2', axisScale.range()[1]).attr('y1', y).attr('y2', y).attr('stroke', '#ddd');
+  for (const t of ticks) {
+    const x = axisScale(t);
+    axisG.append('line').attr('x1', x).attr('x2', x).attr('y1', y - 4).attr('y2', y + 4).attr('stroke', '#ccc');
+    axisG.append('text').attr('x', x).attr('y', y - 8).attr('text-anchor', 'middle').style('font-size', 11).text(t.toString());
+  }
+}
+
+/* ---------- Interaction: file, URL, search, export ---------- */
+
+document.getElementById('fileInput').addEventListener('change', (ev) => {
+  const f = ev.target.files && ev.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = (e) => parseAndRender(e.target.result);
+  reader.readAsText(f);
+});
+
+document.getElementById('loadUrl').addEventListener('click', async () => {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return alert('Enter URL to a raw Newick file.');
+  try {
+    const txt = await fetch(url).then(r => { if (!r.ok) throw new Error('Network error ' + r.status); return r.text(); });
+    parseAndRender(txt);
+  } catch (err) {
+    alert('Failed to fetch: ' + err.message);
+  }
+});
+
+document.getElementById('layoutSelect').addEventListener('change', (ev) => { settings.layout = ev.target.value; if (rootNode) update(rootNode); });
+document.getElementById('collapseToggle').addEventListener('change', (ev) => { settings.collapseOnClick = ev.target.checked; });
+document.getElementById('scaleK').addEventListener('input', (ev) => { settings.scaleK = +ev.target.value; if (rootNode) update(rootNode); });
+
+document.getElementById('btnSearch').addEventListener('click', () => {
+  const q = (document.getElementById('search').value || '').trim().toLowerCase();
+  if (!q || !rootNode) return;
+  const found = rootNode.descendants().find(d => {
+    const label = (d.data.label || d.data.name || '').toLowerCase();
+    const metaValues = Object.values(d.data.meta || {}).join(' ').toLowerCase();
+    return label.includes(q) || metaValues.includes(q);
+  });
+  if (!found) return alert('No match found.');
+  const svgRect = svg.node().getBoundingClientRect();
+  const cx = svgRect.width / 2;
+  const cy = svgRect.height / 2;
+  const x = found.x, y = found.y;
+  const z = d3.zoomTransform(svg.node());
+  const tx = cx - z.k * x;
+  const ty = cy - z.k * y;
+  svg.transition().duration(800).call(d3.zoom().transform, d3.zoomIdentity.translate(tx, ty).scale(z.k));
+  d3.selectAll('path.link').classed('highlight', l => { return found.ancestors().includes(l.target) && (l.target === found || l.target.ancestors().includes(found)); });
+  setTimeout(() => d3.selectAll('path.link').classed('highlight', false), 1500);
+});
+
+document.getElementById('exportSVG').addEventListener('click', () => {
+  const serializer = new XMLSerializer();
+  const clone = svg.node().cloneNode(true);
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `.link { fill:none; stroke:#999; stroke-width:1.1px; } .node circle { stroke:#333; stroke-width:0.8px; fill:#fff; } text { font-family: Arial, sans-serif; font-size:12px; }`;
+  clone.insertBefore(styleEl, clone.firstChild);
+  const src = serializer.serializeToString(clone);
+  const blob = new Blob([src], {type: 'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'tree.svg'; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* ---------- Example Newick (user-provided) ---------- */
+const exampleNewick = `('NP_932311.1 |Botrytis cinerea|||':1.269135, ((XQZ02234.1_|Botrytis_cinerea|Israel||2019:0.206667, QJT73735.1_|Botrytis_cinerea|Italy||2018:0.206667):1.026426, ('YP_009182165.1 |Botrytis cinerea|Spain||':1.239117, (QTP72364.1_|Botrytis_cinerea|Spain||2018:1.210167, (WGG26237.1_|Vitis_vinifera|Russia||2018-07:1.185187, ((WND64009.1_|Botrytis_cinerea|Pakistan||2019:0.523810, XBY87737.1_|Botrytis_cinerea|Spain||:0.523810):0.631317, (AWT23238.1_|Botrytis_cinerea|China||2013:1.161017, (CEZ26296.1_|Botrytis_cinerea|Spain||:1.150243, ('NP_932309.1 |Botrytis cinerea|||':1.106220, (AWT23237.1_|Botrytis_cinerea|China||2013:1.104233, ((XQZ02233.1_|Botrytis_cinerea|Israel||2019:0.050000, QJT73734.1_|Botrytis_cinerea|Italy||2018:0.050000):1.038447, ('NP_932306.1 |Botrytis cinerea|||':1.038624, ((XQZ02232.1_|Botrytis_cinerea|Israel||2019:0.037310, QJT73733.1_|Botrytis_cinerea|Italy||2018:0.037310):0.961341, (QJQ28900.1_|Botrytis_cinerea|Spain||2018:0.948616, ((USE63276.1_||Spain||:0.895604, 'NP_932308.1 |Botrytis cinerea|||':0.895604):0.033924, ('NP_932310.1 |Botrytis cinerea|||':0.917717, (USE63277.1_||Spain||:0.868687, AWT23236.1_|Botrytis_cinerea|China||2013:0.868687):0.049030):0.011812):0.019087):0.050035):0.039972):0.049824):0.015785):0.001987):0.044024):0.010774):-0.005891):0.030060):0.024980):0.028950):-0.006024):0.036041);`;
+
+/* Auto-load example on page load */
+document.addEventListener('DOMContentLoaded', () => {
+  parseAndRender(exampleNewick);
+});
+</script>
+	
+
+<section id="Phylogeny" aria-labelledby="sav-heading">
+<a href="https://auspice.us/" target="_blank">Evolution</a> <br></br>
+</section>
+<section id="References" aria-labelledby="sav-heading">
+	<h2>References</h2>
+</section>
+</body>
+</html>
